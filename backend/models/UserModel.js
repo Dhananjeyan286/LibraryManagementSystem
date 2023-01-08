@@ -22,10 +22,14 @@ const userSchema = mongoose.Schema(
             required: true,
             unique: true,
         },
+        age: {
+            type: Number,
+            required: true,
+        },
         ageCategory: {
-            type:String,
-            enum:["kids","teen","middle aged","old aged"],//0-12 kids, 13-22 teen, 23-45 middle aged, above 45 old aged
-            required: true
+            type: String,
+            enum: ["kids", "teen", "middle aged", "old aged"], //0-12 kids, 13-22 teen, 23-45 middle aged, above 45 old aged
+            required: true,
         },
         isVerified: {
             type: Boolean,

@@ -73,3 +73,7 @@ button {
 .carousel a {
   margin: 0 auto;
 }
+
+.form-checkbox .form-check-label{
+  margin-top: 0px !important;
+}

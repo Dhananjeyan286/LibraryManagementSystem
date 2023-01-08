@@ -1,7 +1,19 @@
 import React from "react";
-import { Navbar, Nav, Container } from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import { logout } from "../actions/UserActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
+
+    const dispatch = useDispatch();
+
+    const userLogin = useSelector((state) => state.userLogin);
+    const { userInfo } = userLogin;
+
+    const logoutHandler = () => {
+        dispatch(logout());
+    };
+
     return (
         <header>
             <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
@@ -12,9 +24,23 @@ const Header = () => {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
-                            <Nav.Link href="/login">
-                                <i className="fas fa-user me-1"></i>Sign In
-                            </Nav.Link>
+                            {userInfo ? (
+                                <NavDropdown
+                                    title={userInfo.name}
+                                    id="username"
+                                >     
+                                    <NavDropdown.Item href="/profile">
+                                        Profile
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item onClick={logoutHandler}>
+                                        Logout
+                                    </NavDropdown.Item>
+                                </NavDropdown>
+                            ) : (
+                                <a href={"/login"} style={{color:"white"}}>
+                                    <i className="fas fa-user"></i> Sign In
+                                </a>
+                            )}
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

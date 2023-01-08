@@ -19,6 +19,7 @@ const authUser = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             phone: user.phone,
+            age: user.age,
             ageCategory: user.ageCategory,
             isAdmin: user.isAdmin,
             isVerified: user.isVerified,
@@ -31,7 +32,7 @@ const authUser = asyncHandler(async (req, res) => {
 });
 
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password, phone, ageCategory } = req.body;
+    const { name, email, password, phone, age, ageCategory } = req.body;
 
     const emailExists = await User.findOne({ email });
     const phoneExists = await User.findOne({ phone });
@@ -49,6 +50,7 @@ const registerUser = asyncHandler(async (req, res) => {
         email,
         password,
         phone,
+        age,
         ageCategory
     });
 
@@ -58,6 +60,7 @@ const registerUser = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             phone: user.phone,
+            age: user.age,
             ageCategory: user.ageCategory,
             isAdmin: user.isAdmin,
             isVerified: user.isVerified,
@@ -78,9 +81,10 @@ const getUserProfile = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             phone: user.phone,
+            age: user.age,
             ageCategory: user.ageCategory,
             isAdmin: user.isAdmin,
-            isVerified: user.isVerified
+            isVerified: user.isVerified,
         });
     } else {
         res.status(404);
@@ -88,4 +92,36 @@ const getUserProfile = asyncHandler(async (req, res) => {
     }
 });
 
-export { authUser, registerUser, getUserProfile };
+const updateUserProfile = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        user.phone = req.body.phone || user.phone;
+        user.age = req.body.age || user.age;
+        user.ageCategory = req.body.ageCategory || user.ageCategory;
+        if (req.body.password) {
+            user.password = req.body.password;
+        }
+
+        const updatedUser = await user.save();
+
+        res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            phone: updatedUser.phone,
+            age: updatedUser.age,
+            ageCategory: updatedUser.ageCategory,
+            isAdmin: updatedUser.isAdmin,
+            isVerified: updatedUser.isVerified,
+            token: generateToken(updatedUser._id),
+        });
+    } else {
+        res.status(404);
+        throw new Error("User not found");
+    }
+});
+
+export { authUser, registerUser, getUserProfile, updateUserProfile };
