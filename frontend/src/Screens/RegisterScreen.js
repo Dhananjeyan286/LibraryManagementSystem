@@ -51,7 +51,7 @@ const RegisterScreen = ({ location, history }) => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        if( !name || !email || !phone || !password || !confirmPassword || age === -1 ) {
+        if( !name || !email || !phone || !password || !confirmPassword || !age || age === -1 ) {
             setMessage("Enter all fields")
             return
         }

@@ -77,3 +77,12 @@ button {
 .form-checkbox .form-check-label{
   margin-top: 0px !important;
 }
+
+.ues .form-check-label {
+  margin-left: 0.5rem !important;
+}
+
+.ues {
+  display: flex !important;
+  align-items: center !important;
+}

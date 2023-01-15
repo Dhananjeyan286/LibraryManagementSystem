@@ -28,7 +28,7 @@ const Header = () => {
                                 <NavDropdown
                                     title={userInfo.name}
                                     id="username"
-                                >     
+                                >
                                     <NavDropdown.Item href="/profile">
                                         Profile
                                     </NavDropdown.Item>
@@ -37,9 +37,22 @@ const Header = () => {
                                     </NavDropdown.Item>
                                 </NavDropdown>
                             ) : (
-                                <a href={"/login"} style={{color:"white"}}>
+                                <a href={"/login"} style={{ color: "white" }}>
                                     <i className="fas fa-user"></i> Sign In
                                 </a>
+                            )}
+                            {userInfo && userInfo.isAdmin && (
+                                <NavDropdown title="Admin" id="adminmenu">
+                                    <NavDropdown.Item href="/admin/userlist">
+                                        Users
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item href="/admin/productlist">
+                                        Products
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item href="/admin/orderlist">
+                                        Orders
+                                    </NavDropdown.Item>
+                                </NavDropdown>
                             )}
                         </Nav>
                     </Navbar.Collapse>
