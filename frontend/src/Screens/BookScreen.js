@@ -60,7 +60,7 @@ const BookScreen = ({ match }) => {
                                         <Col>
                                             <strong>
                                                 {book.ageCategory === "kids"
-                                                    ? "5-12"
+                                                    ? "0-12"
                                                     : book.ageCategory ===
                                                       "teen"
                                                     ? "13-22"
@@ -98,7 +98,8 @@ const BookScreen = ({ match }) => {
                                         <Col>Published Date:</Col>
                                         <Col>
                                             <strong>
-                                                {book.publishedDate}
+                                                {/* {book.publishedDate} */}
+                                                {String(book.publishedDate).substring(8,10) + "-" + String(book.publishedDate).substring(5,7) + "-" + String(book.publishedDate).substring(0,4)}
                                             </strong>
                                         </Col>
                                     </Row>

@@ -46,8 +46,8 @@ const Header = () => {
                                     <NavDropdown.Item href="/admin/userlist">
                                         Users
                                     </NavDropdown.Item>
-                                    <NavDropdown.Item href="/admin/productlist">
-                                        Products
+                                    <NavDropdown.Item href="/admin/booklist">
+                                        Books
                                     </NavDropdown.Item>
                                     <NavDropdown.Item href="/admin/orderlist">
                                         Orders

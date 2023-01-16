@@ -89,10 +89,14 @@ const UserListScreen = ({ history }) => {
                                     )}
                                 </td>
                                 <td>
-                                    <a href={`/admin/user/${user._id}/edit`}>
+                                    <a
+                                        href={`/admin/user/${user._id}/edit`}
+                                        className="me-2"
+                                    >
                                         <Button
                                             variant="light"
                                             className="btn-sm"
+                                            style={{backgroundColor: "yellow"}}
                                         >
                                             <i className="fas fa-edit"></i>
                                         </Button>

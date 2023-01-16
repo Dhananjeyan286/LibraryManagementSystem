@@ -4,6 +4,8 @@ import BookRoutes from "./routes/BookRoutes.js";
 import UserRoutes from "./routes/UserRoutes.js";
 import connectDB from "./config/db.js";
 import { notFound, errorHandler } from "./middleware/ErrorMiddleware.js";
+import path from "path"
+import UploadRoutes from "./routes/UploadRoutes.js"
 
 dotenv.config();
 
@@ -18,6 +20,10 @@ app.get("/", (req, res) => {
 
 app.use("/api/books", BookRoutes);
 app.use("/api/users", UserRoutes);
+app.use("/api/upload", UploadRoutes);
+
+const __dirname = path.resolve();
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 app.use(notFound);
 app.use(errorHandler);

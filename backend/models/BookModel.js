@@ -23,7 +23,7 @@ const reviewSchema = mongoose.Schema(
 
 const bookSchema = mongoose.Schema(
     {
-        user: {//user who created the product
+        user: {//user who created the book
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             ref: "User",

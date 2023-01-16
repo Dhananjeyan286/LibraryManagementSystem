@@ -1,12 +1,15 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { bookListReducer, bookDetailsReducer } from "./reducers/BookReducers";
+import { bookListReducer, bookDetailsReducer, bookDeleteReducer, bookCreateReducer, bookUpdateReducer } from "./reducers/BookReducers";
 import { userLoginReducer, userRegisterReducer, userDetailsReducer, userUpdateProfileReducer, userListReducer, userDeleteReducer, userUpdateReducer } from "./reducers/UserReducers";
 
 const reducer = combineReducers({
     bookList: bookListReducer,
     bookDetails: bookDetailsReducer,
+    bookDelete: bookDeleteReducer,
+    bookCreate: bookCreateReducer,
+    bookUpdate: bookUpdateReducer,
     userLogin: userLoginReducer,
     userRegister: userRegisterReducer,
     userDetails: userDetailsReducer,
