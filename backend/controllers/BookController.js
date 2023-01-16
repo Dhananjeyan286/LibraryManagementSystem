@@ -2,13 +2,21 @@ import asyncHandler from "express-async-handler";
 import Book from "../models/BookModel.js";
 
 const getBooks = asyncHandler(async (req, res) => {
-    const Books = await Book.find({});
 
-    res.json(Books);
+    const pageSize = 2;
+    const page = Number(req.query.pageNumber) || 1;
+
+    const count = await Book.countDocuments();
+
+    const Books = await Book.find({})
+        .limit(pageSize)
+        .skip(pageSize * (page - 1));
+
+    res.json({ Books, page, pages: Math.ceil(count / pageSize) });
 });
 
 const getBookById = asyncHandler(async (req, res) => {
-    const book = await Book.findById(req.params.id);
+    const book = await Book.findById(req.params.id).populate("reviews.user");
 
     if (book) {
         res.json(book);
@@ -89,4 +97,47 @@ const updateBook = asyncHandler(async (req, res) => {
     }
 });
 
-export { getBooks, getBookById, deleteBook, createBook, updateBook };
+const createBookReview = asyncHandler(async (req, res) => {
+    const { rating, comment } = req.body;
+
+    const book = await Book.findById(req.params.id);
+
+    if (book) {
+        const alreadyReviewed = book.reviews.find(
+            (r) => r.user.toString() === req.user._id.toString()
+        );
+
+        if (alreadyReviewed) {
+            res.status(400);
+            throw new Error("Book already reviewed");
+        }
+
+        const review = {
+            rating: Number(rating),
+            comment: comment,
+            user: req.user._id,
+        };
+
+        book.reviews.push(review);
+
+        book.noOfReviews = book.reviews.length;
+
+        book.ratings =
+            book.reviews.reduce((acc, item) => item.rating + acc, 0) /
+            book.reviews.length;
+
+        await book.save();
+        res.status(201).json({ message: "Review added" });
+    } else {
+        res.status(404);
+        throw new Error("Book not found");
+    }
+});
+
+const getTopBooks = asyncHandler(async (req, res) => {
+    const books = await Book.find({}).sort({ ratings: -1 }).limit(3);
+
+    res.json(books);
+});
+
+export { getBooks, getBookById, deleteBook, createBook, updateBook, createBookReview, getTopBooks };

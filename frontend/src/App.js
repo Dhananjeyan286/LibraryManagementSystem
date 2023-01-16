@@ -25,8 +25,10 @@ const App = () => {
                     <Route path="/book/:id" component={BookScreen} />
                     <Route path="/admin/userlist" component={UserListScreen} />
                     <Route path="/admin/user/:id/edit" component={UserEditScreen}/>
-                    <Route path='/admin/booklist' component={BookListScreen} />
-                    <Route path='/admin/book/:id/edit' component={BookEditScreen} />
+                    <Route path="/admin/booklist" component={BookListScreen} exact/>
+                    <Route path="/admin/booklist/:pageNumber" component={BookListScreen} exact/>
+                    <Route path="/admin/book/:id/edit" component={BookEditScreen}/>
+                    <Route path='/page/:pageNumber' component={HomeScreen} exact />
                     <Route path="/" component={HomeScreen} exact />
                 </Container>
             </main>
