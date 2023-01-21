@@ -28,7 +28,9 @@ const App = () => {
                     <Route path="/admin/booklist" component={BookListScreen} exact/>
                     <Route path="/admin/booklist/:pageNumber" component={BookListScreen} exact/>
                     <Route path="/admin/book/:id/edit" component={BookEditScreen}/>
+                    <Route path="/name/:name/author/:author/genre/:genre/ageCategory/:ageCategory/publicationName/:publicationName/ratings/:ratings/noOfReviews/:noOfReviews" component={HomeScreen} exact/>
                     <Route path='/page/:pageNumber' component={HomeScreen} exact />
+                    <Route path="/page/:pageNumber/name/:name/author/:author/genre/:genre/ageCategory/:ageCategory/publicationName/:publicationName/ratings/:ratings/noOfReviews/:noOfReviews" component={HomeScreen} exact />
                     <Route path="/" component={HomeScreen} exact />
                 </Container>
             </main>

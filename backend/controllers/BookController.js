@@ -3,12 +3,61 @@ import Book from "../models/BookModel.js";
 
 const getBooks = asyncHandler(async (req, res) => {
 
+    const searchObj = {}
+
+    if(req.query.name && req.query.name !== "*") {
+        searchObj["name"] = {
+            $regex: req.query.name,
+            $options: "i",
+        };
+    }
+
+    if (req.query.author && req.query.author !== "*") {
+        searchObj["author"] = {
+            $regex: req.query.author,
+            $options: "i",
+        };
+    }
+    
+    if (req.query.genre && req.query.genre !== "*") {
+        searchObj["genre"] = {
+            $regex: req.query.genre,
+            $options: "i",
+        };
+    }
+
+    if (req.query.ageCategory && req.query.ageCategory !== "*") {
+        searchObj["ageCategory"] = {
+            $regex: req.query.ageCategory,
+            $options: "i",
+        };
+    }
+
+    if (req.query.publicationName && req.query.publicationName !== "*") {
+        searchObj["publicationName"] = {
+            $regex: req.query.publicationName,
+            $options: "i",
+        };
+    }
+
+    if (req.query.ratings && req.query.ratings !== "*") {
+        searchObj["ratings"] = {
+            $gt: Number(req.query.ratings),
+        };
+    }
+
+    if (req.query.noOfReviews && req.query.noOfReviews !== "*") {
+        searchObj["noOfReviews"] = {
+            $gt: Number(req.query.noOfReviews),
+        };
+    }
+
     const pageSize = 2;
     const page = Number(req.query.pageNumber) || 1;
 
-    const count = await Book.countDocuments();
+    const count = await Book.countDocuments(searchObj);
 
-    const Books = await Book.find({})
+    const Books = await Book.find(searchObj)
         .limit(pageSize)
         .skip(pageSize * (page - 1));
 

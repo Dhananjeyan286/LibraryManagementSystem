@@ -91,3 +91,9 @@ button {
   display: flex !important;
   align-items: center !important;
 }
+
+.lms-hs-search-from {
+  padding: 20px;
+  border: 0.2rem solid black;
+  border-radius: 0.5rem;
+}

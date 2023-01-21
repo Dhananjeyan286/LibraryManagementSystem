@@ -23,11 +23,16 @@ import {
     BOOK_TOP_FAIL,
 } from "../constants/BookConstants";
 
-export const listBooks = (pageNumber = '') => async (dispatch) => {
+export const listBooks = (pageNumber = '', name = '', author = '', genre = '', ageCategory = '', publicationName = '', ratings = '', noOfReviews = '') => async (dispatch) => {
     try {
         dispatch({ type: BOOK_LIST_REQUEST });
 
-        const { data } = await axios.get(`/api/books?pageNumber=${pageNumber}`);
+        console.log("from actions")
+        console.log(name)
+
+        const { data } = await axios.get(
+            `/api/books?pageNumber=${pageNumber}&name=${name}&author=${author}&genre=${genre}&ageCategory=${ageCategory}&publicationName=${publicationName}&ratings=${ratings}&noOfReviews=${noOfReviews}`
+        );
 
         dispatch({
             type: BOOK_LIST_SUCCESS,
