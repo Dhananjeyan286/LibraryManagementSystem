@@ -1,6 +1,10 @@
 import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import User from "../models/UserModel.js";
+import TokenModel from "../models/TokenModel.js";
+import crypto from "crypto"
+import SendEmail from "../utils/SendEmail.js";
+import SendSms from "../utils/SendSms.js";
 
 const authUser = asyncHandler(async (req, res) => {
     const { email, phone, password } = req.body;
@@ -53,6 +57,20 @@ const registerUser = asyncHandler(async (req, res) => {
         age,
         ageCategory
     });
+
+    const token = await new TokenModel({
+        userId: user._id,
+        token: crypto.randomBytes(32).toString("hex"),
+    }).save();
+    const url = `${process.env.BASE_URL}users/${user.id}/verify/${token.token}`;
+    await SendEmail(user.email, "Verify Email", url);
+    SendSms(user.phone, "Sample message for testing")
+
+
+    // res.status(201).send({
+    //     message: "An Email sent to your account please verify",
+    // });
+    // console.log("email sent from usercontroller.js")
 
     if (user) {
         res.status(201).json({

@@ -7,6 +7,7 @@ import { notFound, errorHandler } from "./middleware/ErrorMiddleware.js";
 import path from "path"
 import UploadRoutes from "./routes/UploadRoutes.js"
 import morgan from "morgan";
+import client from "twilio";
 
 dotenv.config();
 
@@ -20,9 +21,19 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(express.json());
 
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_ACCOUNT_AUTH_TOKEN;
+export const twilioClient = client(accountSid, authToken);
+
 app.get("/", (req, res) => {
     res.send("API is running...");
 });
+
+app.get("/api/rfid",(req,res) => {
+    console.log("reached")
+    console.log(req.query)
+    res.send("Success")
+})
 
 app.use("/api/books", BookRoutes);
 app.use("/api/users", UserRoutes);
