@@ -3,6 +3,7 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { bookListReducer, bookDetailsReducer, bookDeleteReducer, bookCreateReducer, bookUpdateReducer, bookReviewCreateReducer, bookTopRatedReducer } from "./reducers/BookReducers";
 import { userLoginReducer, userRegisterReducer, userDetailsReducer, userUpdateProfileReducer, userListReducer, userDeleteReducer, userUpdateReducer } from "./reducers/UserReducers";
+import { cancelReducer, canCancelReducer, isBookedReducer, requestCreateReducer, fetchAllRequestReducer, fetchIndividualRequestReducer, fetchUserRequestReducer } from "./reducers/RequestReducers"
 
 const reducer = combineReducers({
     bookList: bookListReducer,
@@ -19,6 +20,13 @@ const reducer = combineReducers({
     userList: userListReducer,
     userDelete: userDeleteReducer,
     userUpdate: userUpdateReducer,
+    cancel: cancelReducer,
+    canCancel: canCancelReducer,
+    isBooked: isBookedReducer,
+    requestCreate: requestCreateReducer,
+    fetchAllRequest: fetchAllRequestReducer,
+    fetchIndividualRequest: fetchIndividualRequestReducer,
+    fetchUserRequest: fetchUserRequestReducer
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

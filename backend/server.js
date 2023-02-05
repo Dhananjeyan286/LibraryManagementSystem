@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import BookRoutes from "./routes/BookRoutes.js";
 import UserRoutes from "./routes/UserRoutes.js";
+import RequestRoutes from "./routes/RequestRoutes.js"
 import connectDB from "./config/db.js";
 import { notFound, errorHandler } from "./middleware/ErrorMiddleware.js";
 import path from "path"
@@ -38,6 +39,7 @@ app.get("/api/rfid",(req,res) => {
 app.use("/api/books", BookRoutes);
 app.use("/api/users", UserRoutes);
 app.use("/api/upload", UploadRoutes);
+app.use("/api/request", RequestRoutes)
 
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));

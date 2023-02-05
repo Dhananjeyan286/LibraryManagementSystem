@@ -3,6 +3,9 @@ import bcrypt from "bcryptjs";
 
 const userSchema = mongoose.Schema(
     {
+        rfid: {
+            type: String
+        },
         name: {
             type: String,
             required: true,
@@ -41,6 +44,10 @@ const userSchema = mongoose.Schema(
             required: true,
             default: false,
         },
+        fineAmount: {
+            type: Number,
+            default: 0
+        }
     },
     {
         timestamps: true,

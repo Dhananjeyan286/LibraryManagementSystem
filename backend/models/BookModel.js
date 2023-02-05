@@ -23,6 +23,9 @@ const reviewSchema = mongoose.Schema(
 
 const bookSchema = mongoose.Schema(
     {
+        rfid: {
+            type: String
+        },
         user: {//user who created the book
             type: mongoose.Schema.Types.ObjectId,
             required: true,

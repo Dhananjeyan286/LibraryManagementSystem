@@ -12,6 +12,8 @@ import UserListScreen from "./Screens/UserListScreen";
 import UserEditScreen from "./Screens/UserEditScreen";
 import BookListScreen from "./Screens/BookListScreen";
 import BookEditScreen from "./Screens/BookEditScreen";
+import RequestScreen from "./Screens/RequestScreen";
+import RequestListScreen from "./Screens/RequestListScreen";
 
 const App = () => {
     return (
@@ -23,10 +25,12 @@ const App = () => {
                     <Route path="/register" component={RegisterScreen} />
                     <Route path="/profile" component={ProfileScreen} />
                     <Route path="/book/:id" component={BookScreen} />
+                    <Route path="/request/:id" component={RequestScreen} />
                     <Route path="/admin/userlist" component={UserListScreen} />
                     <Route path="/admin/user/:id/edit" component={UserEditScreen}/>
                     <Route path="/admin/booklist" component={BookListScreen} exact/>
                     <Route path="/admin/booklist/:pageNumber" component={BookListScreen} exact/>
+                    <Route path="/admin/requestlist" component={RequestListScreen} />
                     <Route path="/admin/book/:id/edit" component={BookEditScreen}/>
                     <Route path="/name/:name/author/:author/genre/:genre/ageCategory/:ageCategory/publicationName/:publicationName/ratings/:ratings/noOfReviews/:noOfReviews" component={HomeScreen} exact/>
                     <Route path='/page/:pageNumber' component={HomeScreen} exact />

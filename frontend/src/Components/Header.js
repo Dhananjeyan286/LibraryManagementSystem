@@ -49,8 +49,8 @@ const Header = () => {
                                     <NavDropdown.Item href="/admin/booklist">
                                         Books
                                     </NavDropdown.Item>
-                                    <NavDropdown.Item href="/admin/orderlist">
-                                        Orders
+                                    <NavDropdown.Item href="/admin/requestlist">
+                                        Requests
                                     </NavDropdown.Item>
                                 </NavDropdown>
                             )}

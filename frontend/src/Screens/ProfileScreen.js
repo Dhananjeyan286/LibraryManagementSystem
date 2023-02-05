@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../Components/Message";
 import Loader from "../Components/Loader";
 import { getUserDetails, updateUserProfile } from "../actions/UserActions";
+import { userRequest } from "../actions/RequestActions"
+import { convertDateToString } from "../utils/conversion"
 
 const ProfileScreen = ({ location, history }) => {
     const [name, setName] = useState("");
@@ -26,12 +28,16 @@ const ProfileScreen = ({ location, history }) => {
     const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
     const { success, error : errorInUpdation } = userUpdateProfile;
 
+    const userRequestReducer = useSelector((state) => state.fetchUserRequest);
+    const { loading: userRequestLoading, error: userRequestError, request } = userRequestReducer;
+
     useEffect(() => {
         if (!userInfo) {
             history.push("/login");
         } else {
             if (!user.name) {
                 dispatch(getUserDetails("profile"));
+                dispatch(userRequest(userInfo._id))
             } else {
                 setName(user.name);
                 setEmail(user.email);
@@ -92,7 +98,9 @@ const ProfileScreen = ({ location, history }) => {
                 <h2>User Profile</h2>
                 {message && <Message variant="danger">{message}</Message>}
                 {error && <Message variant="danger">{error}</Message>}
-                {errorInUpdation && <Message variant="danger">{errorInUpdation}</Message>}
+                {errorInUpdation && (
+                    <Message variant="danger">{errorInUpdation}</Message>
+                )}
                 {success && (
                     <Message variant="success">Profile Updated</Message>
                 )}
@@ -164,7 +172,92 @@ const ProfileScreen = ({ location, history }) => {
                 </Form>
             </Col>
             <Col md={9}>
-                <h2>My Orders</h2>
+                <h2>My history of requests</h2>
+                {userRequestLoading ? (
+                    <Loader />
+                ) : userRequestError ? (
+                    <Message variant="danger">{userRequestError}</Message>
+                ) : (
+                    <Table
+                        striped
+                        bordered
+                        hover
+                        responsive
+                        className="table-sm"
+                    >
+                        <thead>
+                            <tr>
+                                <th>BOOK NAME</th>
+                                <th>BOOKED AT</th>
+                                <th>IS IT BORROWED</th>
+                                <th>IS IT RETURNED</th>
+                                <th>IS IT CANCELLED</th>
+                                <th>FINE PER DAY</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {request.map((req) => (
+                                <tr key={req._id}>
+                                    <td>{req.bookId.name}</td>
+                                    <td>
+                                        {convertDateToString(
+                                            new Date(req.bookedAt)
+                                        )}
+                                    </td>
+                                    <td className="lms-text-center">
+                                        {req.isBorrowed ? (
+                                            <i
+                                                className="fas fa-check"
+                                                style={{ color: "green" }}
+                                            ></i>
+                                        ) : (
+                                            <i
+                                                className="fas fa-times"
+                                                style={{ color: "red" }}
+                                            ></i>
+                                        )}
+                                    </td>
+                                    <td className="lms-text-center">
+                                        {req.isReturned ? (
+                                            <i
+                                                className="fas fa-check"
+                                                style={{ color: "green" }}
+                                            ></i>
+                                        ) : (
+                                            <i
+                                                className="fas fa-times"
+                                                style={{ color: "red" }}
+                                            ></i>
+                                        )}
+                                    </td>
+                                    <td className="lms-text-center">
+                                        {req.isCancelled ? (
+                                            <i
+                                                className="fas fa-check"
+                                                style={{ color: "green" }}
+                                            ></i>
+                                        ) : (
+                                            <i
+                                                className="fas fa-times"
+                                                style={{ color: "red" }}
+                                            ></i>
+                                        )}
+                                    </td>
+                                    <td className="lms-text-center">₹{req.bookId.finePerDay}</td>
+                                    <td>
+                                        <a
+                                            href={`/request/${req._id}`}
+                                            className="lms-btn btn-sm btn-dark"
+                                        >
+                                            Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                )}
             </Col>
         </Row>
     );

@@ -2,19 +2,18 @@ import mongoose from "mongoose";
 
 const requestSchema = mongoose.Schema(
     {
-        user: {
+        userId: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             ref: "User",
         },
-        book: {
+        bookId: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             ref: "Book",
         },
         isBooked: {
             type: Boolean,
-            required: true,
             default: false,
         },
         bookedAt: {
@@ -22,7 +21,6 @@ const requestSchema = mongoose.Schema(
         },
         isBorrowed: {
             type: Boolean,
-            required: true,
             default: false,
         },
         borrowedAt: {
@@ -30,40 +28,46 @@ const requestSchema = mongoose.Schema(
         },
         isReturned: {
             type: Boolean,
-            required: true,
             default: false,
         },
         returnedAt: {
             type: Date,
         },
-        isBookScannedForBorrowing: {
+        isCancelled: {
             type: Boolean,
-            required: true,
             default: false,
         },
-        isBookScannedForReturning: {
+        cancelledAt: {
+            type: Date,
+        },
+        isClosed: {
             type: Boolean,
-            required: true,
             default: false,
         },
-        isFinePaid: {
+        closedAt: {
+            type: Date,
+        },
+        isBookScanned: {
             type: Boolean,
-            required: true,
             default: false,
         },
-        fineAmnt: {
+        isUserScanned: {
+            type: Boolean,
+            default: false,
+        },
+        usersRaisingRequest: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+            }
+        ],
+        fineAmount: {
             type: Number,
-            required: true,
-            default: 0,
+            default: 0
         },
-        paymentMethod: {
-            type: String,
-            required: true,
-        },
-        paymentResult: {
-            type: String,
-            required: true,
-        },
+        returnedOnOrBefore: {
+            type: Date
+        }
     },
     {
         timestamps: true,
