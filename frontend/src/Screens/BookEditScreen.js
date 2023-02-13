@@ -441,7 +441,7 @@ const BookEditScreen = ({ match, history }) => {
                         </Form.Group>
 
                         <Form.Group controlId="rfid">
-                            <Form.Label>Enter RFID tag number</Form.Label>
+                            <Form.Label>RFID tag number</Form.Label>
                             <Form.Control
                                 type="text"
                                 placeholder="Enter tag number"
