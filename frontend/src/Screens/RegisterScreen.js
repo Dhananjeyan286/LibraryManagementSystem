@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../Components/Message";
 import Loader from "../Components/Loader";
 import FormContainer from "../Components/FormContainer";
-import { register } from "../actions/UserActions";
+import { register, credentialsVerify, OTPResend } from "../actions/UserActions";
 
 const RegisterScreen = ({ location, history }) => {
     const [name, setName] = useState("");
@@ -14,12 +14,21 @@ const RegisterScreen = ({ location, history }) => {
     const [age, setAge] = useState(-1);
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [message, setMessage] = useState(null);
+    const [message, setMessage] = useState("");
+    const [emailOTP, setemailOTP] = useState("")
+    const [phoneOTP, setphoneOTP] = useState("")
+    const [verifyMessage, setverifyMessage] = useState("")
 
     const dispatch = useDispatch();
 
     const userRegister = useSelector((state) => state.userRegister);
-    const { loading, error, userInfo } = userRegister;
+    const { loading, error, success } = userRegister;
+
+    const userCredentialsVerify = useSelector((state) => state.userCredentialsVerify)
+    const { loading: credentialsVerifyLoading, error: credentialsVerifyError, userInfo } = userCredentialsVerify
+
+    const userResendOTP = useSelector((state) => state.userResendOTP)
+    const { loading: resendLoading, error: resendError, success: resendSuccess } = userResendOTP
 
     const redirect = "/login";
 
@@ -70,6 +79,20 @@ const RegisterScreen = ({ location, history }) => {
         }
         
         dispatch(register(name, email, phone, password, age, ageCategory));
+    };
+
+    const verifySubmitHandler = (e) => {
+        e.preventDefault()
+        if(!emailOTP || !phoneOTP) {
+            setverifyMessage("Enter all fields")
+            return
+        }
+        dispatch(credentialsVerify(email, phone, emailOTP, phoneOTP))
+    }
+
+    const resendOTPHandler = (e) => {
+        e.preventDefault();
+        dispatch(OTPResend(email, phone));
     };
 
     return (
@@ -144,14 +167,61 @@ const RegisterScreen = ({ location, history }) => {
                 </Button>
             </Form>
 
+            {success && (
+                <div className="mt-3">
+                    {(credentialsVerifyLoading || resendLoading) && <Loader />}
+                    {credentialsVerifyError && (
+                        <Message variant="danger">
+                            {credentialsVerifyError}
+                        </Message>
+                    )}
+                    {resendError && (
+                        <Message variant="danger">{resendError}</Message>
+                    )}
+                    {verifyMessage && (
+                        <Message variant="danger">{verifyMessage}</Message>
+                    )}
+                    {resendSuccess && (
+                        <Message variant="success">
+                            OTP has been sent successfully
+                        </Message>
+                    )}
+                    <Form>
+                        <Form.Group controlId="emailOTP">
+                            <Form.Label>Email OTP</Form.Label>
+                            <Form.Control
+                                type="number"
+                                placeholder="Enter the OTP recieved by your mail-id"
+                                value={emailOTP}
+                                onChange={(e) => setemailOTP(e.target.value)}
+                            ></Form.Control>
+                        </Form.Group>
+
+                        <Form.Group controlId="phoneOTP">
+                            <Form.Label>Phone OTP</Form.Label>
+                            <Form.Control
+                                type="number"
+                                placeholder="Enter the OTP recieved by your phone number"
+                                value={phoneOTP}
+                                onChange={(e) => setphoneOTP(e.target.value)}
+                            ></Form.Control>
+                        </Form.Group>
+                    </Form>
+                    <Button type="button" onClick={verifySubmitHandler} className="mt-3" variant="primary">
+                        Verify
+                    </Button>
+                    <Button
+                        className="btn btn-primary mt-3 ms-3"
+                        onClick={resendOTPHandler}
+                    >
+                        Resend OTP
+                    </Button>
+                </div>
+            )}
+
             <Row className="py-3">
                 <Col>
-                    Have an Account?{" "}
-                    <a
-                        href={"/login"}
-                    >
-                        Login
-                    </a>
+                    Have an Account? <a href={"/login"}>Login</a>
                 </Col>
             </Row>
         </FormContainer>

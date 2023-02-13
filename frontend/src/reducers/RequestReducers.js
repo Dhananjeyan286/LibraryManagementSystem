@@ -19,7 +19,13 @@ import {
     USER_REQUEST_CREATE_SUCCESS,
     INDIVIDUAL_REQUEST_CREATE_FAIL,
     INDIVIDUAL_REQUEST_CREATE_REQUEST,
-    INDIVIDUAL_REQUEST_CREATE_SUCCESS
+    INDIVIDUAL_REQUEST_CREATE_SUCCESS,
+    EDIT_REQUEST_CREATE_REQUEST,
+    EDIT_REQUEST_CREATE_SUCCESS,
+    EDIT_REQUEST_CREATE_FAIL,
+    GET_SUGGESTIONS_REQUEST,
+    GET_SUGGESTIONS_SUCCESS,
+    GET_SUGGESTIONS_FAIL
 } from "../constants/RequestConstants";
 
 export const requestCreateReducer = (state = {}, action) => {
@@ -119,6 +125,40 @@ export const fetchIndividualRequestReducer = (state = {request: {}}, action) => 
                 request: action.payload,
             };
         case INDIVIDUAL_REQUEST_CREATE_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+};
+
+export const editRequestReducer = (state = {request: {}}, action) => {
+    switch (action.type) {
+        case EDIT_REQUEST_CREATE_REQUEST:
+            return { loading: true };
+        case EDIT_REQUEST_CREATE_SUCCESS:
+            return {
+                loading: false,
+                success: true,
+                request: action.payload,
+            };
+        case EDIT_REQUEST_CREATE_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+};
+
+export const getSuggestionsReducer = (state = { suggestions: [] }, action) => {
+    switch (action.type) {
+        case GET_SUGGESTIONS_REQUEST:
+            return { loading: true };
+        case GET_SUGGESTIONS_SUCCESS:
+            return {
+                loading: false,
+                success: true,
+                suggestions: action.payload,
+            };
+        case GET_SUGGESTIONS_FAIL:
             return { loading: false, error: action.payload };
         default:
             return state;

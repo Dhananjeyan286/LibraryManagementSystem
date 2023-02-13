@@ -27,9 +27,6 @@ export const listBooks = (pageNumber = '', name = '', author = '', genre = '', a
     try {
         dispatch({ type: BOOK_LIST_REQUEST });
 
-        console.log("from actions")
-        console.log(name)
-
         const { data } = await axios.get(
             `/api/books?pageNumber=${pageNumber}&name=${name}&author=${author}&genre=${genre}&ageCategory=${ageCategory}&publicationName=${publicationName}&ratings=${ratings}&noOfReviews=${noOfReviews}`
         );

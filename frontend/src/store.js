@@ -2,8 +2,8 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { bookListReducer, bookDetailsReducer, bookDeleteReducer, bookCreateReducer, bookUpdateReducer, bookReviewCreateReducer, bookTopRatedReducer } from "./reducers/BookReducers";
-import { userLoginReducer, userRegisterReducer, userDetailsReducer, userUpdateProfileReducer, userListReducer, userDeleteReducer, userUpdateReducer } from "./reducers/UserReducers";
-import { cancelReducer, canCancelReducer, isBookedReducer, requestCreateReducer, fetchAllRequestReducer, fetchIndividualRequestReducer, fetchUserRequestReducer } from "./reducers/RequestReducers"
+import { userLoginReducer, userRegisterReducer, userDetailsReducer, userUpdateProfileReducer, userListReducer, userDeleteReducer, userUpdateReducer, userCredentialsVerifyReducer, userResendOTPReducer, finePaymentReducer } from "./reducers/UserReducers";
+import { cancelReducer, canCancelReducer, isBookedReducer, requestCreateReducer, fetchAllRequestReducer, fetchIndividualRequestReducer, fetchUserRequestReducer, editRequestReducer, getSuggestionsReducer } from "./reducers/RequestReducers"
 
 const reducer = combineReducers({
     bookList: bookListReducer,
@@ -26,7 +26,12 @@ const reducer = combineReducers({
     requestCreate: requestCreateReducer,
     fetchAllRequest: fetchAllRequestReducer,
     fetchIndividualRequest: fetchIndividualRequestReducer,
-    fetchUserRequest: fetchUserRequestReducer
+    fetchUserRequest: fetchUserRequestReducer,
+    editRequest: editRequestReducer,
+    getSuggestions: getSuggestionsReducer,
+    userCredentialsVerify: userCredentialsVerifyReducer,
+    userResendOTP: userResendOTPReducer,
+    finePayment: finePaymentReducer
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

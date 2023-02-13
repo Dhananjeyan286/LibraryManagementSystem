@@ -31,6 +31,7 @@ const BookEditScreen = ({ match, history }) => {
     const [message, setMessage] = useState("")
     const [successMessage, setSuccessMessage] = useState("")
     const [uploading, setUploading] = useState(false);
+    const [rfid, setRfid] = useState("")
 
     const dispatch = useDispatch();
 
@@ -60,6 +61,7 @@ const BookEditScreen = ({ match, history }) => {
             setRackNumber(book.rackNumber);
             setRowNumber(book.rowNumber);
             setPositionFromLeft(book.positionFromLeft);
+            setRfid(book.rfid)
             let day = book.publishedDate.substring(8, 10);
             let month = book.publishedDate.substring(5, 7);
             let year = book.publishedDate.substring(0, 4);
@@ -85,6 +87,7 @@ const BookEditScreen = ({ match, history }) => {
                 setRackNumber(book.rackNumber);
                 setRowNumber(book.rowNumber);
                 setPositionFromLeft(book.positionFromLeft);
+                setRfid(book.rfid)
                 let day = book.publishedDate.substring(8, 10);
                 let month = book.publishedDate.substring(5, 7);
                 let year = book.publishedDate.substring(0, 4);
@@ -119,11 +122,11 @@ const BookEditScreen = ({ match, history }) => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        if(!name || !image || !description || !author || !genre || !ageCategory || !publishedDate || noOfPages < 1 || !publicationName || editionNumber < 0 || finePerDay < 0 || noOfReviews < 0 || !ratings || floorNumber < 0 || rackNumber < 1 || rowNumber < 1 || positionFromLeft < 1) {
+        if(!name || !image || !description || !author || !genre || !ageCategory || !publishedDate || noOfPages < 1 || !publicationName || editionNumber < 0 || finePerDay < 0 || noOfReviews < 0 || !ratings || floorNumber < 0 || rackNumber < 1 || rowNumber < 1 || positionFromLeft < 1 ||!rfid) {
             setMessage("Enter all fields with proper values")
             return
         }
-        dispatch(updateBook({_id: bookId, name, image, description, author, genre, ageCategory, publishedDate, noOfPages, publicationName, editionNumber, finePerDay, noOfReviews, ratings, floorNumber, rackNumber, rowNumber, positionFromLeft}))
+        dispatch(updateBook({_id: bookId, name, image, description, author, genre, ageCategory, publishedDate, noOfPages, publicationName, editionNumber, finePerDay, noOfReviews, ratings, floorNumber, rackNumber, rowNumber, positionFromLeft, rfid}))
     };
 
     return (
@@ -434,6 +437,16 @@ const BookEditScreen = ({ match, history }) => {
                                 onChange={(e) =>
                                     setPositionFromLeft(e.target.value)
                                 }
+                            ></Form.Control>
+                        </Form.Group>
+
+                        <Form.Group controlId="rfid">
+                            <Form.Label>Enter RFID tag number</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter tag number"
+                                value={rfid}
+                                onChange={(e) => setRfid(e.target.value)}
                             ></Form.Control>
                         </Form.Group>
 

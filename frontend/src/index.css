@@ -107,3 +107,24 @@ button {
   font-size: 0.875rem !important;
   font-weight: 100 !important;
 }
+
+.suggestion-card-body{
+  padding: 0.5rem 0rem 0rem 0rem !important;
+  line-height : normal
+}
+
+.text-align-center{
+  text-align: center !important;
+}
+
+.suggestion-button{
+  border-radius: 0.5rem !important;
+  letter-spacing: unset;
+  font-weight: 100 !important;
+}
+
+.suggestion-div-border{
+  border: 0.2rem solid black;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}

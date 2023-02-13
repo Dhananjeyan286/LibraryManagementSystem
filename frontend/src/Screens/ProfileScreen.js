@@ -3,9 +3,10 @@ import { Form, Button, Row, Col, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../Components/Message";
 import Loader from "../Components/Loader";
-import { getUserDetails, updateUserProfile } from "../actions/UserActions";
+import { getUserDetails, updateUserProfile, payFine } from "../actions/UserActions";
 import { userRequest } from "../actions/RequestActions"
 import { convertDateToString } from "../utils/conversion"
+import GPay from "@google-pay/button-react";
 
 const ProfileScreen = ({ location, history }) => {
     const [name, setName] = useState("");
@@ -21,6 +22,9 @@ const ProfileScreen = ({ location, history }) => {
 
     const userDetails = useSelector((state) => state.userDetails);
     const { loading, error, user } = userDetails;
+
+    const finePayment = useSelector((state) => state.finePayment);
+    const { loading: finePaymentLoading, error: finePaymentError, success: finePaymentSuccess } = finePayment;
 
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
@@ -47,6 +51,12 @@ const ProfileScreen = ({ location, history }) => {
             }
         }
     }, [dispatch, history, userInfo, user]);
+
+    useEffect(() => {
+        if(finePaymentSuccess) {
+            dispatch(getUserDetails("profile"))
+        }
+    }, [dispatch, finePaymentSuccess])
 
     const findAgeCategory = (enteredAge) => {
         if (enteredAge >= 0 && enteredAge <= 100) {
@@ -92,84 +102,100 @@ const ProfileScreen = ({ location, history }) => {
         );
     };
 
+    const paymentSuccessHandler = (paymentData) => {
+        dispatch(payFine(paymentData));
+    };
+
     return (
         <Row>
             <Col md={3}>
                 <h2>User Profile</h2>
                 {message && <Message variant="danger">{message}</Message>}
-                {error && <Message variant="danger">{error}</Message>}
                 {errorInUpdation && (
                     <Message variant="danger">{errorInUpdation}</Message>
                 )}
                 {success && (
                     <Message variant="success">Profile Updated</Message>
                 )}
-                {loading && <Loader />}
-                <Form onSubmit={submitHandler}>
-                    <Form.Group controlId="name">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
+                {loading ? (
+                    <Loader />
+                ) : error ? (
+                    <Message variant="danger">{error}</Message>
+                ) : (
+                    <Form onSubmit={submitHandler}>
+                        <Form.Group controlId="name">
+                            <Form.Label>Name</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            ></Form.Control>
+                        </Form.Group>
 
-                    <Form.Group controlId="email">
-                        <Form.Label>Email Address</Form.Label>
-                        <Form.Control
-                            type="email"
-                            placeholder="Enter email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
+                        <Form.Group controlId="email">
+                            <Form.Label>Email Address</Form.Label>
+                            <Form.Control
+                                type="email"
+                                placeholder="Enter email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            ></Form.Control>
+                        </Form.Group>
 
-                    <Form.Group controlId="phone">
-                        <Form.Label>Phone</Form.Label>
-                        <Form.Control
-                            type="tel"
-                            placeholder="Enter phone"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
+                        <Form.Group controlId="phone">
+                            <Form.Label>Phone</Form.Label>
+                            <Form.Control
+                                type="tel"
+                                placeholder="Enter phone"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                            ></Form.Control>
+                        </Form.Group>
 
-                    <Form.Group controlId="age">
-                        <Form.Label>Age</Form.Label>
-                        <Form.Control
-                            type="number"
-                            placeholder="Enter age"
-                            value={age}
-                            onChange={(e) => findAgeCategory(e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
+                        <Form.Group controlId="age">
+                            <Form.Label>Age</Form.Label>
+                            <Form.Control
+                                type="number"
+                                placeholder="Enter age"
+                                value={age}
+                                onChange={(e) =>
+                                    findAgeCategory(e.target.value)
+                                }
+                            ></Form.Control>
+                        </Form.Group>
 
-                    <Form.Group controlId="password">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                            type="password"
-                            placeholder="Enter password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
+                        <Form.Group controlId="password">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control
+                                type="password"
+                                placeholder="Enter password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            ></Form.Control>
+                        </Form.Group>
 
-                    <Form.Group controlId="confirmPassword">
-                        <Form.Label>Confirm Password</Form.Label>
-                        <Form.Control
-                            type="password"
-                            placeholder="Confirm password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
+                        <Form.Group controlId="confirmPassword">
+                            <Form.Label>Confirm Password</Form.Label>
+                            <Form.Control
+                                type="password"
+                                placeholder="Confirm password"
+                                value={confirmPassword}
+                                onChange={(e) =>
+                                    setConfirmPassword(e.target.value)
+                                }
+                            ></Form.Control>
+                        </Form.Group>
 
-                    <Button type="submit" className="mt-3" variant="primary">
-                        Update
-                    </Button>
-                </Form>
+                        <Button
+                            type="submit"
+                            className="mt-3"
+                            variant="primary"
+                        >
+                            Update
+                        </Button>
+                    </Form>
+                )}
             </Col>
             <Col md={9}>
                 <h2>My history of requests</h2>
@@ -192,7 +218,7 @@ const ProfileScreen = ({ location, history }) => {
                                 <th>IS IT BORROWED</th>
                                 <th>IS IT RETURNED</th>
                                 <th>IS IT CANCELLED</th>
-                                <th>FINE PER DAY</th>
+                                <th>FINE AMOUNT</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -244,7 +270,9 @@ const ProfileScreen = ({ location, history }) => {
                                             ></i>
                                         )}
                                     </td>
-                                    <td className="lms-text-center">₹{req.bookId.finePerDay}</td>
+                                    <td className="lms-text-center">
+                                        ₹{req.fineAmount}
+                                    </td>
                                     <td>
                                         <a
                                             href={`/request/${req._id}`}
@@ -257,6 +285,86 @@ const ProfileScreen = ({ location, history }) => {
                             ))}
                         </tbody>
                     </Table>
+                )}
+                {finePaymentError && (
+                    <Message variant="danger">{finePaymentError}</Message>
+                )}
+                {finePaymentSuccess && (
+                    <Message variant="success">
+                        Payment has been successfully made.
+                    </Message>
+                )}
+                {loading || finePaymentLoading ? (
+                    <Loader />
+                ) : error ? (
+                    <Message variant="danger">{error}</Message>
+                ) : (
+                    <>
+                        <h1>FINE PAYMENT</h1>
+                        <h5>
+                            Pending fine amount to be paid:{" "}
+                            <strong>₹{user.fineAmount}</strong>
+                        </h5>
+                        {user.fineAmount > 0 && (
+                            <GPay
+                                className="mt-2"
+                                environment="TEST"
+                                paymentRequest={{
+                                    apiVersion: 2,
+                                    apiVersionMinor: 0,
+                                    allowedPaymentMethods: [
+                                        {
+                                            type: "CARD",
+                                            parameters: {
+                                                allowedAuthMethods: [
+                                                    "PAN_ONLY",
+                                                    "CRYPTOGRAM_3DS",
+                                                ],
+                                                allowedCardNetworks: [
+                                                    "MASTERCARD",
+                                                    "VISA",
+                                                ],
+                                            },
+                                            tokenizationSpecification: {
+                                                type: "PAYMENT_GATEWAY",
+                                                parameters: {
+                                                    gateway: "example",
+                                                    gatewayMerchantId:
+                                                        "exampleGatewayMerchantId",
+                                                },
+                                            },
+                                        },
+                                    ],
+                                    merchantInfo: {
+                                        merchantId: "12345678901234567890",
+                                        merchantName: "Demo Merchant",
+                                    },
+                                    transactionInfo: {
+                                        totalPriceStatus: "FINAL",
+                                        totalPriceLabel: "Total",
+                                        totalPrice: user.fineAmount.toString(),
+                                        currencyCode: "INR",
+                                        countryCode: "IN",
+                                    },
+                                    shippingAddressRequired: false,
+                                    //   callbackIntents: ["SHIPPING_ADDRESS", "PAYMENT_AUTHORIZATION"],
+                                    callbackIntents: ["PAYMENT_AUTHORIZATION"],
+                                }}
+                                onLoadPaymentData={paymentSuccessHandler}
+                                onPaymentAuthorized={(paymentData) => {
+                                    //   console.log("Payment Authorised Success", paymentData);
+                                    return { transactionState: "SUCCESS" };
+                                }}
+                                //   onPaymentDataChanged={(paymentData) => {
+                                //       console.log("On Payment Data Changed", paymentData);
+                                //       return {};
+                                //   }}
+                                //   existingPaymentMethodRequired="false"
+                                //   buttonColor="black"
+                                buttonType="pay"
+                            />
+                        )}
+                    </>
                 )}
             </Col>
         </Row>

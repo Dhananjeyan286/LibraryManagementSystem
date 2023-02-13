@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Table, Button } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../Components/Message";
 import Loader from "../Components/Loader";
@@ -39,8 +39,8 @@ const RequestListScreen = ({ history }) => {
                             <th>IS IT BORROWED</th>
                             <th>IS IT RETURNED</th>
                             <th>IS IT CANCELLED</th>
-                            <th>FINE PER DAY</th>
-                            <th></th>
+                            <th>FINE AMOUNT</th>
+                            {/* <th></th> */}
                             <th></th>
                         </tr>
                     </thead>
@@ -93,7 +93,7 @@ const RequestListScreen = ({ history }) => {
                                     )}
                                 </td>
                                 <td className="lms-text-center">
-                                    ₹{req.bookId.finePerDay}
+                                    ₹{req.fineAmount}
                                 </td>
                                 <td>
                                     <a
@@ -102,7 +102,7 @@ const RequestListScreen = ({ history }) => {
                                     >
                                         Details
                                     </a>
-                                    <a
+                                    {/* <a
                                         href={`/admin/request/${request._id}/edit`}
                                         className="me-2 ms-2"
                                     >
@@ -116,7 +116,7 @@ const RequestListScreen = ({ history }) => {
                                         >
                                             <i className="fas fa-edit"></i>
                                         </Button>
-                                    </a>
+                                    </a> */}
                                 </td>
                             </tr>
                         ))}

@@ -24,6 +24,15 @@ import {
     USER_UPDATE_FAIL,
     USER_UPDATE_SUCCESS,
     USER_UPDATE_REQUEST,
+    USER_CREDENTIALS_VERIFY_REQUEST,
+    USER_CREDENTIALS_VERIFY_SUCCESS,
+    USER_CREDENTIALS_VERIFY_FAIL,
+    RESEND_OTP_REQUEST,
+    RESEND_OTP_SUCCESS,
+    RESEND_OTP_FAIL,
+    FINE_PAYMENT_REQUEST,
+    FINE_PAYMENT_SUCCESS,
+    FINE_PAYMENT_FAIL,
 } from "../constants/UserConstants";
 
 export const login = (email, phone, password) => async (dispatch) => {
@@ -100,6 +109,74 @@ export const register = (name, email, phone, password, age, ageCategory) => asyn
     } catch (error) {
         dispatch({
             type: USER_REGISTER_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+};
+
+export const credentialsVerify = (email, phone, emailOTP, phoneOTP) => async (dispatch) => {
+    try {
+        dispatch({
+            type: USER_CREDENTIALS_VERIFY_REQUEST,
+        });
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+
+        const { data } = await axios.post(
+            "/api/users/verify",
+            { email, phone, emailOTP, phoneOTP },
+            config
+        );
+
+        dispatch({
+            type: USER_CREDENTIALS_VERIFY_SUCCESS,
+            payload: data,
+        });
+
+    } catch (error) {
+        dispatch({
+            type: USER_CREDENTIALS_VERIFY_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+};
+
+export const OTPResend = (email, phone) => async (dispatch) => {
+    try {
+        dispatch({
+            type: RESEND_OTP_REQUEST,
+        });
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+
+        const { data } = await axios.post(
+            "/api/users/resend",
+            { email, phone },
+            config
+        );
+
+        dispatch({
+            type: RESEND_OTP_SUCCESS,
+            payload: data,
+        });
+
+    } catch (error) {
+        dispatch({
+            type: RESEND_OTP_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message
@@ -269,6 +346,44 @@ export const updateUser = (user) => async (dispatch, getState) => {
     } catch (error) {
         dispatch({
             type: USER_UPDATE_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+};
+
+export const payFine = (paymentData) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: FINE_PAYMENT_REQUEST,
+        });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.post(
+            "/api/users/fine",
+            { paymentData },
+            config
+        );
+
+        dispatch({
+            type: FINE_PAYMENT_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: FINE_PAYMENT_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message

@@ -21,6 +21,12 @@ import {
     INDIVIDUAL_REQUEST_CREATE_FAIL,
     INDIVIDUAL_REQUEST_CREATE_REQUEST,
     INDIVIDUAL_REQUEST_CREATE_SUCCESS,
+    EDIT_REQUEST_CREATE_REQUEST,
+    EDIT_REQUEST_CREATE_SUCCESS,
+    EDIT_REQUEST_CREATE_FAIL,
+    GET_SUGGESTIONS_REQUEST,
+    GET_SUGGESTIONS_SUCCESS,
+    GET_SUGGESTIONS_FAIL,
 } from "../constants/RequestConstants";
 
 export const createRequest = (userId, bookId) => async (dispatch, getState) => {
@@ -271,6 +277,76 @@ export const individualRequest = (userId, id) => async (dispatch, getState) => {
     } catch (error) {
         dispatch({
             type: INDIVIDUAL_REQUEST_CREATE_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+};
+
+export const editRequest = (request) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: EDIT_REQUEST_CREATE_REQUEST,
+        });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.post(
+            `/api/request/edit`,
+            request,
+            config
+        );
+
+        dispatch({
+            type: EDIT_REQUEST_CREATE_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: EDIT_REQUEST_CREATE_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+};
+
+export const listSuggestions = () => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: GET_SUGGESTIONS_REQUEST,
+        });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.get(`/api/request/suggestion`, config);
+
+        dispatch({
+            type: GET_SUGGESTIONS_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: GET_SUGGESTIONS_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message

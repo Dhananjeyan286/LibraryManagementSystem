@@ -7,6 +7,7 @@ import Loader from "../Components/Loader";
 import Message from "../Components/Message";
 import Paginate from "../Components/Paginate";
 import BookCarousel from "../Components/BookCarousel";
+import SuggestionCard from "../Components/SuggestionCard"
 
 const HomeScreen = ({match, history}) => {
 
@@ -92,6 +93,12 @@ const HomeScreen = ({match, history}) => {
                         </Col>
                     </Row>
                     <BookCarousel />
+                    <Row className="align-items-center">
+                        <Col>
+                            <h1 className="mb-0">BOOKS YOU MAY LIKE</h1>
+                        </Col>
+                    </Row>
+                    <SuggestionCard />
                 </>
             ) : (
                 <a href="/" className="btn btn-dark">

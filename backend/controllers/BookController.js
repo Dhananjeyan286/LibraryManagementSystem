@@ -106,7 +106,8 @@ const createBook = asyncHandler(async (req, res) => {
         floorNumber: 2,
         rackNumber: 22,
         rowNumber: 22,
-        positionFromLeft: 2
+        positionFromLeft: 2,
+        rfid: "222222"
     });
 
     const createdBook = await book.save();
@@ -114,7 +115,7 @@ const createBook = asyncHandler(async (req, res) => {
 });
 
 const updateBook = asyncHandler(async (req, res) => {
-    const { name, image, description, author, genre, ageCategory, publishedDate, noOfPages, publicationName, editionNumber, finePerDay, noOfReviews, ratings, floorNumber, rackNumber, rowNumber, positionFromLeft } = req.body;
+    const { name, image, description, author, genre, ageCategory, publishedDate, noOfPages, publicationName, editionNumber, finePerDay, noOfReviews, ratings, floorNumber, rackNumber, rowNumber, positionFromLeft, rfid } = req.body;
 
     const book = await Book.findById(req.params.id);
 
@@ -137,6 +138,7 @@ const updateBook = asyncHandler(async (req, res) => {
         book.rackNumber = rackNumber;
         book.rowNumber = rowNumber;
         book.positionFromLeft = positionFromLeft;
+        book.rfid = rfid
 
         const updatedBook = await book.save();
         res.json(updatedBook);

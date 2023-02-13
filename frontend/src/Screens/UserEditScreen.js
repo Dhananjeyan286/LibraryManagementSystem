@@ -17,6 +17,8 @@ const UserEditScreen = ({ match, history }) => {
     const [ageCategory, setAgeCategory] = useState("");
     const [age, setAge] = useState(-1);
     const [isAdmin, setIsAdmin] = useState(false)
+    const [isVerified, setIsVerified] = useState(false);
+    const [rfid, setRfid] = useState("")
     const [message, setMessage] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null)
 
@@ -36,6 +38,8 @@ const UserEditScreen = ({ match, history }) => {
             setName(user.name);
             setEmail(user.email);
             setIsAdmin(user.isAdmin);
+            setIsVerified(user.isVerified)
+            setRfid(user.rfid)
             setPhone(user.phone);
             setAge(user.age);
         } else {
@@ -47,6 +51,8 @@ const UserEditScreen = ({ match, history }) => {
                 setIsAdmin(user.isAdmin);
                 setPhone(user.phone);
                 setAge(user.age);
+                setIsVerified(user.isVerified)
+                setRfid(user.rfid)
             }
         }
     }, [dispatch, userId, user, history, successUpdate]);
@@ -77,12 +83,16 @@ const UserEditScreen = ({ match, history }) => {
             setMessage("Enter all fields");
             return;
         }
+        if((!rfid && isVerified) || (rfid && !isVerified)) {
+            setMessage("Either enter the RFID tag number and make the user as verified or make the user as not verified if the RFID tag number is not available")
+            return
+        }
         var expr = /^(0|91)?[6-9][0-9]{9}$/;
         if (!expr.test(phone)) {
             setMessage("Enter a valid mobile number");
             return;
         }
-        dispatch(updateUser({ _id: userId, name, email, isAdmin, phone, age, ageCategory }));
+        dispatch(updateUser({ _id: userId, name, email, isAdmin, phone, age, ageCategory, isVerified, rfid }));
     };
 
     return (
@@ -93,9 +103,13 @@ const UserEditScreen = ({ match, history }) => {
             <FormContainer>
                 <h1>Edit User</h1>
                 {loadingUpdate && <Loader />}
-                {message && <Message variant = "danger">{message}</Message>}
-                {successMessage && <Message variant="success">{successMessage}</Message>}
-                {errorUpdate && ( <Message variant="danger">{errorUpdate}</Message> )}
+                {message && <Message variant="danger">{message}</Message>}
+                {successMessage && (
+                    <Message variant="success">{successMessage}</Message>
+                )}
+                {errorUpdate && (
+                    <Message variant="danger">{errorUpdate}</Message>
+                )}
                 {loading ? (
                     <Loader />
                 ) : error ? (
@@ -154,7 +168,29 @@ const UserEditScreen = ({ match, history }) => {
                             ></Form.Check>
                         </Form.Group>
 
-                        <Button type="submit" variant="primary">
+                        <Form.Group controlId="isVerified">
+                            <Form.Check
+                                type="checkbox"
+                                label="Is Verified User"
+                                checked={isVerified}
+                                className="ues"
+                                onChange={(e) =>
+                                    setIsVerified(e.target.checked)
+                                }
+                            ></Form.Check>
+                        </Form.Group>
+
+                        <Form.Group controlId="rfid">
+                            <Form.Label>Enter RFID tag number</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter tag number"
+                                value={rfid}
+                                onChange={(e) => setRfid(e.target.value)}
+                            ></Form.Control>
+                        </Form.Group>
+
+                        <Button type="submit" className="mt-3" variant="primary">
                             Update
                         </Button>
                     </Form>

@@ -47,6 +47,11 @@ const userSchema = mongoose.Schema(
         fineAmount: {
             type: Number,
             default: 0
+        },
+        isUserCredentialsVerified: {
+            type: Boolean,
+            required: true,
+            default: false
         }
     },
     {

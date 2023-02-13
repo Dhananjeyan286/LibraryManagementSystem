@@ -8,6 +8,7 @@ import SendSms from "../utils/SendSms.js"
 var borrowingLimitDays = 1;
 var maximumBookingTime = 1440; // 24 hours
 var maximumFineAmount = 500
+var suggestionLimit = 6
 
 var add_minutes = function (dt, minutes) {
     return new Date(dt.getTime() + minutes * 60000);
@@ -112,20 +113,18 @@ export const processCardID = asyncHandler(async (req, res) => {
                 let updatedRequestRaisedForReturning = await requestRaisedForReturning.save();
 
                 //check the fine amount here
-                let borrowedDate = new Date(
-                    requestRaisedForReturning.borrowedAt
-                );
-                let differenceBetweenBorrowAndReturn = subtract_days(
-                    borrowedDate,
-                    new Date()
-                );
+
+
+                let expectedReturnedDate = new Date(requestRaisedForReturning.returnedOnOrBefore)
+                let curDate = new Date()
                 let fineAmntForCurBook = 0
                 let userDetails = await User.findById(
                     requestRaisedForReturning.userId._id
                 );
                 let totalFineAmnt = userDetails.fineAmount;
-                if (differenceBetweenBorrowAndReturn > borrowingLimitDays) {
-                    let diff = differenceBetweenBorrowAndReturn - borrowingLimitDays;
+                if(curDate > expectedReturnedDate) {
+                    let differenceBetweenCurDateAndExpectedReturnDate = subtract_days(expectedReturnedDate, curDate);
+                    let diff = differenceBetweenCurDateAndExpectedReturnDate;
                     fineAmntForCurBook = diff * requestRaisedForReturning.bookId.finePerDay;
 
                     updatedRequestRaisedForReturning.fineAmount = fineAmntForCurBook
@@ -135,6 +134,32 @@ export const processCardID = asyncHandler(async (req, res) => {
                     totalFineAmnt = userDetails.fineAmount
                     await userDetails.save()
                 }
+
+
+
+                // let borrowedDate = new Date(
+                //     requestRaisedForReturning.borrowedAt
+                // );
+                // let differenceBetweenBorrowAndReturn = subtract_days(
+                //     borrowedDate,
+                //     new Date()
+                // );
+                // let fineAmntForCurBook = 0
+                // let userDetails = await User.findById(
+                //     requestRaisedForReturning.userId._id
+                // );
+                // let totalFineAmnt = userDetails.fineAmount;
+                // if (differenceBetweenBorrowAndReturn > borrowingLimitDays) {
+                //     let diff = differenceBetweenBorrowAndReturn - borrowingLimitDays;
+                //     fineAmntForCurBook = diff * requestRaisedForReturning.bookId.finePerDay;
+
+                //     updatedRequestRaisedForReturning.fineAmount = fineAmntForCurBook
+                //     await updatedRequestRaisedForReturning.save()
+
+                //     userDetails.fineAmount += fineAmntForCurBook;
+                //     totalFineAmnt = userDetails.fineAmount
+                //     await userDetails.save()
+                // }
 
                 //send sms/email to the users, since this book has become available for borrowing
                 if(requestRaisedForReturning.usersRaisingRequest) {
@@ -381,5 +406,167 @@ export const individualRequest = asyncHandler(async (req, res) => {
     } else {
         res.status(404)
         throw new Error(`No such request is found.`);
+    }
+});
+
+export const editRequest = asyncHandler(async(req,res) => {
+    let request = await Request.findById(req.body.id)
+
+    if(request) {
+        request.isBooked = req.body.isBooked;
+        request.bookedAt = req.body.bookedAt;
+        request.isBorrowed = req.body.isBorrowed;
+        request.borrowedAt = req.body.borrowedAt;
+        request.isReturned = req.body.isReturned;
+        request.returnedAt = req.body.returnedAt;
+        request.isClosed = req.body.isClosed;
+        request.closedAt = req.body.closedAt;
+        request.isCancelled = req.body.isCancelled;
+        request.cancelledAt = req.body.cancelledAt;
+        request.isBookScanned = req.body.isBookScanned;
+        request.isUserScanned = req.body.isUserScanned;
+        request.returnedOnOrBefore = req.body.returnedOnOrBefore;
+
+        let updatedRequest = await updatedRequest.save()
+        res.status(201).json(updatedRequest)
+    } else {
+        res.status(404)
+        throw new Error(`No such request is found`)
+    }
+})
+
+function isNotPresent(arr, item) {
+    let flag = true;
+    arr.forEach((entry)=>{
+        if(entry === item) {
+            flag = false
+        }
+    })
+    return flag
+}
+
+export const getSuggestions = asyncHandler(async (req, res) => {
+    let user = await User.findById(req.user._id);
+    let requests = await Request.find({ userId: req.user._id }).populate(
+        "bookId"
+    );
+
+    let authors = [];
+    let genre = [];
+    let bookIdReadByUser = [];
+    let ageCategory = user.ageCategory;
+    let overallSuggestions = [];
+    let authorSuggestions = [];
+    let genreSuggestions = [];
+    let ageCategorySuggestions = [];
+    let ratingsSuggestions = [];
+
+    //get authors and genre and bookid of previous requests done by the user
+    if (requests) {
+        requests.forEach((request) => {
+            let curAuthor = request.bookId.author;
+            if (isNotPresent(authors, curAuthor)) {
+                authors.push(curAuthor);
+            }
+            let curGenre = request.bookId.genre;
+            if (isNotPresent(genre, curGenre)) {
+                genre.push(curGenre);
+            }
+            bookIdReadByUser.push(request.bookId._id);
+        });
+
+        //get author suggestions
+        for await  (const author of authors) {
+            let notInIds = bookIdReadByUser.concat(authorSuggestions);
+            let individualAuthorSuggestions = await Book.find({
+                author: author,
+                _id: { $nin: notInIds },
+            });
+            individualAuthorSuggestions.forEach(
+                (individualAuthorSuggestion) => {
+                    authorSuggestions.push(individualAuthorSuggestion._id);
+                }
+            );
+        };
+
+        //get genre suggestions
+        for await (const gen of genre) {
+            let notInIds = bookIdReadByUser.concat(
+                genreSuggestions,
+                authorSuggestions
+            );
+            let individualGenreSuggestions = await Book.find({
+                genre: gen,
+                _id: { $nin: notInIds },
+            });
+            individualGenreSuggestions.forEach((individualGenreSuggestion) => {
+                genreSuggestions.push(individualGenreSuggestion._id);
+            });
+        };
+
+        let notInACId = bookIdReadByUser.concat(
+            authorSuggestions,
+            genreSuggestions
+        );
+        let ageCategoryBasedBooks = await Book.find({
+            ageCategory: ageCategory,
+            _id: { $nin: notInACId },
+        });
+        ageCategoryBasedBooks.forEach((ageCategoryBasedBook) => {
+            ageCategorySuggestions.push(ageCategoryBasedBook._id);
+        });
+        let notInRId = bookIdReadByUser.concat(
+            authorSuggestions,
+            genreSuggestions,
+            ageCategorySuggestions
+        );
+        let ratingsSuggestionsBasedBooks = await Book.find({
+            _id: { $nin: notInRId },
+        }).sort({ ratings: -1 });
+
+        ratingsSuggestionsBasedBooks.forEach((ratingsSuggestionsBasedBook) => {
+            ratingsSuggestions.push(ratingsSuggestionsBasedBook._id);
+        });
+
+        //get maximum length among 4 suggestion arrays
+        let maxLength = Math.max(
+            authorSuggestions.length,
+            genreSuggestions.length,
+            ageCategorySuggestions.length,
+            ratingsSuggestions.length
+        );
+
+        //push the ids to the suggestions array one each from all 4 types of suggestions
+        for (let i = 0; i < maxLength; i++) {
+            if (i < authorSuggestions.length) {
+                overallSuggestions.push(authorSuggestions[i]);
+            }
+
+            if (i < genreSuggestions.length) {
+                overallSuggestions.push(genreSuggestions[i]);
+            }
+
+            if (i < ageCategorySuggestions.length) {
+                overallSuggestions.push(ageCategorySuggestions[i]);
+            }
+
+            if (i < ratingsSuggestions.length) {
+                overallSuggestions.push(ratingsSuggestions[i]);
+            }
+        }
+
+        //query the books from the ids in overallSuggestions array and limit the number to the suggestionsLimit
+        let returnObjBooks =[];
+        for (let i = 0; i < suggestionLimit; i++) {
+            if(overallSuggestions.length > i) {
+                let suggestionIndiBook = await Book.findById(overallSuggestions[i]);
+                returnObjBooks.push(suggestionIndiBook);
+            }
+        }
+
+        res.status(200).json(returnObjBooks);
+    } else {
+        let returnObjBooks = await Book.find({}).sort({ratings: -1}).limit(suggestionLimit);
+        res.status(201).json(returnObjBooks)
     }
 });

@@ -8,7 +8,8 @@ const tokenSchema = new Schema({
         ref: "User",
         unique: true,
     },
-    token: { type: String, required: true },
+    emailOTP: { type: Number, required: true },
+    phoneOTP: { type: Number, required: true },
     createdAt: { type: Date, default: Date.now, expires: 3600 },
 });
 
