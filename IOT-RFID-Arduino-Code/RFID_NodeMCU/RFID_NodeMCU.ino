@@ -30,7 +30,7 @@ const char *password = "Ram.nive16";
 
 //Web/Server address to read/write from 
 // wifi
-const char *host = "192.168.1.9";   //IP address of server
+const char *host = "192.168.1.8";   //IP address of server
 
 //phone
 // const char *host = "192.168.176.189";
@@ -106,7 +106,7 @@ void loop() {
   //GET Data
   getData = "?CardID=" + CardID;  //Note "?" added at front
   //wifi
-  Link = "http://192.168.1.9:5000/api/request" + getData;
+  Link = "http://192.168.1.8:5000/api/request" + getData;
   
   //phone
   // Link = "http://192.168.176.189:5000/api/rfid" + getData;

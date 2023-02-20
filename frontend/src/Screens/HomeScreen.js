@@ -28,6 +28,9 @@ const HomeScreen = ({match, history}) => {
     const [noOfReviews, setnoOfReviews] = useState("")
     // const [message, setmessage] = useState("")
 
+    const userLogin = useSelector((state) => state.userLogin);
+    const { userInfo } = userLogin;
+
     const pageNumber = match.params.pageNumber || 1;
 
     const dispatch = useDispatch();
@@ -93,12 +96,18 @@ const HomeScreen = ({match, history}) => {
                         </Col>
                     </Row>
                     <BookCarousel />
-                    <Row className="align-items-center">
-                        <Col>
-                            <h1 className="mb-0">BOOKS YOU MAY LIKE</h1>
-                        </Col>
-                    </Row>
-                    <SuggestionCard />
+                    {userInfo && 
+                        (
+                            <>
+                                <Row className="align-items-center">
+                                    <Col>
+                                        <h1 className="mb-0">BOOKS YOU MAY LIKE</h1>
+                                    </Col>
+                                </Row>
+                                <SuggestionCard />
+                            </>
+                        )
+                    }
                 </>
             ) : (
                 <a href="/" className="btn btn-dark">

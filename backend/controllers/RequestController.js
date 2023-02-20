@@ -8,7 +8,7 @@ import SendSms from "../utils/SendSms.js"
 var borrowingLimitDays = 1;
 var maximumBookingTime = 1440; // 24 hours
 var maximumFineAmount = 500
-var suggestionLimit = 6
+var suggestionLimit = 3
 
 var add_minutes = function (dt, minutes) {
     return new Date(dt.getTime() + minutes * 60000);
@@ -35,6 +35,7 @@ var convertDateToString = function (dt) {
 
 export const processCardID = asyncHandler(async (req, res) => {
     let cardId = req.query.CardID
+    console.log(cardId)
     let user = await User.findOne({"rfid" : cardId}).select("-password")
     if(user) {
         // res.send("user")
@@ -56,10 +57,16 @@ export const processCardID = asyncHandler(async (req, res) => {
             requestRaised.borrowedAt = new Date()
             requestRaised.returnedOnOrBefore = add_days(requestRaised.borrowedAt, borrowingLimitDays)
             await requestRaised.save()
+            console.log(
+                `User tag for the user ${requestRaised.userId.name} has been scanned successfully, now you can borrow the book ${requestRaised.bookId.name}`
+            );
             res.status(200).json({
                 message: `User tag for the user ${requestRaised.userId.name} has been scanned successfully, now you can borrow the book ${requestRaised.bookId.name}`
             })
         } else {
+            console.log(
+                "Either the request for the book was not raised, or the book tag was not scanned first, or the user tag is already scanned"
+            );
             res.status(404)
             throw new Error("Either the request for the book was not raised, or the book tag was not scanned first, or the user tag is already scanned")
         }
@@ -81,6 +88,9 @@ export const processCardID = asyncHandler(async (req, res) => {
         if(requestRaisedForBorrowing) {
             requestRaisedForBorrowing.isBookScanned = true
             await requestRaisedForBorrowing.save()
+            console.log(
+                `Book tag for the book ${requestRaisedForBorrowing.bookId.name} is successfully scanned, now scan your user tag for the user ${requestRaisedForBorrowing.userId.name} for borrowing.`
+            );
             res.status(201).json({
                 message: `Book tag for the book ${requestRaisedForBorrowing.bookId.name} is successfully scanned, now scan your user tag for the user ${requestRaisedForBorrowing.userId.name} for borrowing.`
             })
@@ -177,12 +187,17 @@ export const processCardID = asyncHandler(async (req, res) => {
                         }
                     })
                 }
-
+                console.log(
+                    `Book tag for the book ${requestRaisedForReturning.bookId.name} successfully scanned, now the user ${requestRaisedForReturning.userId.name} can return the book. Fine amount for this book is ₹${fineAmntForCurBook} and total fine amount to be paid is ₹${totalFineAmnt}`
+                );
                 res.status(201).json({
                     message: `Book tag for the book ${requestRaisedForReturning.bookId.name} successfully scanned, now the user ${requestRaisedForReturning.userId.name} can return the book. Fine amount for this book is ₹${fineAmntForCurBook} and total fine amount to be paid is ₹${totalFineAmnt}`,
                 });
                 return;
             } else {
+                console.log(
+                    `Wait for ${minimumMinutes} minute(s) from the time of borrowing the book inorder to return it`
+                );
                 res.status(400)
                 throw new Error(`Wait for ${minimumMinutes} minute(s) from the time of borrowing the book inorder to return it`)
                 return
@@ -191,10 +206,14 @@ export const processCardID = asyncHandler(async (req, res) => {
         }
 
         //code reaches here if book is not scanned for borrowing as well as book is not scanned for returning
+        console.log(
+            "Either no request has been raised or the book tag has already been scanned"
+        );
         res.status(404)
         throw new Error("Either no request has been raised or the book tag has already been scanned")
         return
     }
+    console.log("User or book not found for the given tag");
     res.status(404)
     throw new Error("User or book not found for the given tag")
 });
