@@ -51,9 +51,9 @@ const bookSchema = mongoose.Schema(
             type: String,
             required: true,
         },
-        ageCategory: {
+        department: {
             type: String,
-            enum: ["kids", "teen", "middle aged", "old aged", "all"], //0-12 kids, 13-22 teen, 23-45 middle aged, above 45 old aged
+            enum: ["CSE", "IT", "ECE", "EEE", "Mech"],
             required: true,
         },
         publishedDate: {

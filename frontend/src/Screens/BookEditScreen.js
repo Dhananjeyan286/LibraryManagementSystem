@@ -16,7 +16,7 @@ const BookEditScreen = ({ match, history }) => {
     const [description, setDescription] = useState("");
     const [author, setAuthor] = useState("");
     const [genre, setGenre] = useState("");
-    const [ageCategory, setAgeCategory] = useState("kids");
+    const [department, setDepartment] = useState("kids");
     const [publishedDate, setPublishedDate] = useState(new Date());
     const [noOfPages, setNoOfPages] = useState(0);
     const [publicationName, setPublicationName] = useState("");
@@ -50,7 +50,7 @@ const BookEditScreen = ({ match, history }) => {
             setDescription(book.description);
             setAuthor(book.author);
             setGenre(book.genre);
-            setAgeCategory(book.ageCategory);
+            setDepartment(book.department);
             setNoOfPages(book.noOfPages);
             setPublicationName(book.publicationName);
             setEditionNumber(book.editionNumber);
@@ -76,7 +76,7 @@ const BookEditScreen = ({ match, history }) => {
                 setDescription(book.description);
                 setAuthor(book.author);
                 setGenre(book.genre);
-                setAgeCategory(book.ageCategory);
+                setDepartment(book.department);
                 setNoOfPages(book.noOfPages);
                 setPublicationName(book.publicationName);
                 setEditionNumber(book.editionNumber);
@@ -122,11 +122,11 @@ const BookEditScreen = ({ match, history }) => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        if(!name || !image || !description || !author || !genre || !ageCategory || !publishedDate || noOfPages < 1 || !publicationName || editionNumber < 0 || finePerDay < 0 || noOfReviews < 0 || !ratings || floorNumber < 0 || rackNumber < 1 || rowNumber < 1 || positionFromLeft < 1 ||!rfid) {
+        if(!name || !image || !description || !author || !genre || !department || !publishedDate || noOfPages < 1 || !publicationName || editionNumber < 0 || finePerDay < 0 || noOfReviews < 0 || !ratings || floorNumber < 0 || rackNumber < 1 || rowNumber < 1 || positionFromLeft < 1 ||!rfid) {
             setMessage("Enter all fields with proper values")
             return
         }
-        dispatch(updateBook({_id: bookId, name, image, description, author, genre, ageCategory, publishedDate, noOfPages, publicationName, editionNumber, finePerDay, noOfReviews, ratings, floorNumber, rackNumber, rowNumber, positionFromLeft, rfid}))
+        dispatch(updateBook({_id: bookId, name, image, description, author, genre, department, publishedDate, noOfPages, publicationName, editionNumber, finePerDay, noOfReviews, ratings, floorNumber, rackNumber, rowNumber, positionFromLeft, rfid}))
     };
 
     return (
@@ -209,22 +209,22 @@ const BookEditScreen = ({ match, history }) => {
                         </Form.Group>
 
                         <Row>
-                            <Form.Group controlId="ageCategory">
-                                <Form.Label>Age Category</Form.Label>
+                            <Form.Group controlId="department">
+                                <Form.Label>Department</Form.Label>
                             </Form.Group>
                             <Form.Group as={Col} controlId="checkbox1">
                                 <Form.Check
                                     type="radio"
-                                    id="LMS-book-edit-checkbox-kids"
-                                    label="kids (0 - 12 years)"
-                                    name="isAgeCategoryChecked"
+                                    id="LMS-book-edit-checkbox-CSE"
+                                    label="CSE"
+                                    name="isDepartmentChecked"
                                     checked={
-                                        ageCategory === "kids" ? true : false
+                                        department === "CSE" ? true : false
                                     }
                                     defaultChecked="true"
                                     onChange={(e) => {
                                         if (e.target.checked) {
-                                            setAgeCategory("kids");
+                                            setDepartment("CSE");
                                         }
                                     }}
                                     className="form-checkbox"
@@ -237,15 +237,15 @@ const BookEditScreen = ({ match, history }) => {
                             >
                                 <Form.Check
                                     type="radio"
-                                    id="LMS-book-edit-checkbox-teen"
-                                    label="teen (13 - 22 years)"
-                                    name="isAgeCategoryChecked"
+                                    id="LMS-book-edit-checkbox-IT"
+                                    label="IT"
+                                    name="isDepartmentChecked"
                                     checked={
-                                        ageCategory === "teen" ? true : false
+                                        department === "IT" ? true : false
                                     }
                                     onChange={(e) => {
                                         if (e.target.checked) {
-                                            setAgeCategory("teen");
+                                            setDepartment("IT");
                                         }
                                     }}
                                     className="form-checkbox"
@@ -258,17 +258,17 @@ const BookEditScreen = ({ match, history }) => {
                             >
                                 <Form.Check
                                     type="radio"
-                                    id="LMS-book-edit-checkbox-middle-aged"
-                                    label="middle aged (23 - 45 years)"
-                                    name="isAgeCategoryChecked"
+                                    id="LMS-book-edit-checkbox-EEE"
+                                    label="EEE"
+                                    name="isDepartmentChecked"
                                     checked={
-                                        ageCategory === "middle aged"
+                                        department === "EEE"
                                             ? true
                                             : false
                                     }
                                     onChange={(e) => {
                                         if (e.target.checked) {
-                                            setAgeCategory("middle aged");
+                                            setDepartment("EEE");
                                         }
                                     }}
                                     className="form-checkbox"
@@ -281,17 +281,17 @@ const BookEditScreen = ({ match, history }) => {
                             >
                                 <Form.Check
                                     type="radio"
-                                    id="LMS-book-edit-checkbox-old-aged"
-                                    label="old aged (above 45 years)"
-                                    name="isAgeCategoryChecked"
+                                    id="LMS-book-edit-checkbox-ECE"
+                                    label="ECE"
+                                    name="isDepartmentChecked"
                                     checked={
-                                        ageCategory === "old aged"
+                                        department === "ECE"
                                             ? true
                                             : false
                                     }
                                     onChange={(e) => {
                                         if (e.target.checked) {
-                                            setAgeCategory("old aged");
+                                            setDepartment("ECE");
                                         }
                                     }}
                                     className="form-checkbox"
@@ -304,15 +304,15 @@ const BookEditScreen = ({ match, history }) => {
                             >
                                 <Form.Check
                                     type="radio"
-                                    id="LMS-book-edit-checkbox-all"
-                                    label="all (0 - 100 years)"
-                                    name="isAgeCategoryChecked"
+                                    id="LMS-book-edit-checkbox-Mech"
+                                    label="Mech"
+                                    name="isDepartmentChecked"
                                     checked={
-                                        ageCategory === "all" ? true : false
+                                        department === "Mech" ? true : false
                                     }
                                     onChange={(e) => {
                                         if (e.target.checked) {
-                                            setAgeCategory("all");
+                                            setDepartment("Mech");
                                         }
                                     }}
                                     className="form-checkbox"

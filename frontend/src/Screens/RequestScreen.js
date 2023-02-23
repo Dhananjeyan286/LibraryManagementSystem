@@ -80,21 +80,10 @@ const RequestScreen = ({ match, history }) => {
 
                                     <ListGroup.Item>
                                         <Row>
-                                            <Col>Age Category:</Col>
+                                            <Col>Department:</Col>
                                             <Col>
                                                 <strong>
-                                                    {request.bookId
-                                                        .ageCategory === "kids"
-                                                        ? "0-12"
-                                                        : request.bookId
-                                                              .ageCategory ===
-                                                          "teen"
-                                                        ? "13-22"
-                                                        : request.bookId
-                                                              .ageCategory ===
-                                                          "middle aged"
-                                                        ? "23-45"
-                                                        : "above 45"}
+                                                    {request.bookId.department}
                                                 </strong>
                                             </Col>
                                         </Row>
@@ -218,6 +207,34 @@ const RequestScreen = ({ match, history }) => {
                         <Col md={5}>
                             <Card>
                                 <ListGroup variant="flush">
+
+                                    <ListGroup.Item>
+                                        <Row>
+                                            <Col>Borrowed by:</Col>
+                                            <Col>
+                                                {request.userId.name}
+                                            </Col>
+                                        </Row>
+                                    </ListGroup.Item>
+
+                                    <ListGroup.Item>
+                                        <Row>
+                                            <Col>Borrowed user's phone number:</Col>
+                                            <Col>
+                                                {request.userId.phone}
+                                            </Col>
+                                        </Row>
+                                    </ListGroup.Item>
+
+                                    <ListGroup.Item>
+                                        <Row>
+                                            <Col>Borrowed user's email-id:</Col>
+                                            <Col>
+                                                {request.userId.email}
+                                            </Col>
+                                        </Row>
+                                    </ListGroup.Item>
+
                                     <ListGroup.Item>
                                         <Row>
                                             <Col>Is It Booked:</Col>

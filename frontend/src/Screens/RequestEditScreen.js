@@ -22,7 +22,7 @@ const UserEditScreen = ({ match, history }) => {
     const [isBookScanned, setisBookScanned] = useState(false);
     const [isUserScanned, setisUserScanned] = useState(false);
     const [returnedOnOrBefore, setreturnedOnOrBefore] = useState(new Date());
-    const [message, setmessage] = useState("")
+    const [message, setMessage] = useState("")
 
     const dispatch = useDispatch();
 
@@ -62,7 +62,7 @@ const UserEditScreen = ({ match, history }) => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        if (!name || !email || !phone || !age || age === -1) {
+        if (!name || !email || !phone || !department) {
             setMessage("Enter all fields");
             return;
         }
@@ -78,8 +78,7 @@ const UserEditScreen = ({ match, history }) => {
                 email,
                 isAdmin,
                 phone,
-                age,
-                ageCategory,
+                department
             })
         );
     };
@@ -96,6 +95,7 @@ const UserEditScreen = ({ match, history }) => {
                     <Message variant="danger">{editedError}</Message>
                 )}
                 {success && <Message variant="success">{success}</Message>}
+                {message && <Message variant="danger">{message}</Message>}
                 {loading ? (
                     <Loader />
                 ) : error ? (

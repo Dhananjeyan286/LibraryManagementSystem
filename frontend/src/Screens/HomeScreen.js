@@ -14,7 +14,7 @@ const HomeScreen = ({match, history}) => {
     const nameFromParams = match.params.name
     const authorFromParams = match.params.author;
     const genreFromParams = match.params.genre;
-    const ageCategoryFromParams = match.params.ageCategory;
+    const departmentFromParams = match.params.department;
     const publicationNameFromParams = match.params.publicationName;
     const ratingsFromParams = match.params.ratings;
     const noOfReviewsFromParams = match.params.noOfReviews;
@@ -22,7 +22,7 @@ const HomeScreen = ({match, history}) => {
     const [name, setname] = useState("")
     const [author, setauthor] = useState("");
     const [genre, setgenre] = useState("");
-    const [ageCategory, setageCategory] = useState("");
+    const [department, setdepartment] = useState("");
     const [publicationName, setpublicationName] = useState("");
     const [ratings, setratings] = useState("");
     const [noOfReviews, setnoOfReviews] = useState("")
@@ -44,17 +44,17 @@ const HomeScreen = ({match, history}) => {
                 nameFromParams ,
                 authorFromParams ,
                 genreFromParams ,
-                ageCategoryFromParams ,
+                departmentFromParams ,
                 publicationNameFromParams ,
                 ratingsFromParams ,
                 noOfReviewsFromParams 
             )
         );
-    }, [dispatch, pageNumber, nameFromParams, authorFromParams, genreFromParams, ageCategoryFromParams, publicationNameFromParams, ratingsFromParams, noOfReviewsFromParams, match]);
+    }, [dispatch, pageNumber, nameFromParams, authorFromParams, genreFromParams, departmentFromParams, publicationNameFromParams, ratingsFromParams, noOfReviewsFromParams, match]);
 
     const searchSubmitHandler = (e)=>{
         e.preventDefault()
-        if(!name && !author && !genre && !ageCategory && !publicationName && !ratings && !noOfReviews) {
+        if(!name && !author && !genre && !department && !publicationName && !ratings && !noOfReviews) {
             history.push("/")
             // setmessage("Enter atleast one valid filter")
             return
@@ -62,15 +62,15 @@ const HomeScreen = ({match, history}) => {
             setname("")
             setauthor("")
             setgenre("")
-            setageCategory("")
+            setdepartment("")
             setpublicationName("")
             setratings("")
             setnoOfReviews("")
             history.push(
                 `/page/1/name/${name ? name : "*"}/author/${
                     author ? author : "*"
-                }/genre/${genre ? genre : "*"}/ageCategory/${
-                    ageCategory ? ageCategory : "*"
+                }/genre/${genre ? genre : "*"}/department/${
+                    department ? department : "*"
                 }/publicationName/${
                     publicationName ? publicationName : "*"
                 }/ratings/${ratings ? ratings : "*"}/noOfReviews/${
@@ -85,7 +85,7 @@ const HomeScreen = ({match, history}) => {
             {(!nameFromParams || nameFromParams === "*") &&
             (!authorFromParams || authorFromParams === "*") &&
             (!genreFromParams || genreFromParams === "*") &&
-            (!ageCategoryFromParams || ageCategoryFromParams === "*") &&
+            (!departmentFromParams || departmentFromParams === "*") &&
             (!publicationNameFromParams || publicationNameFromParams === "*") &&
             (!ratingsFromParams || ratingsFromParams === "*") &&
             (!noOfReviewsFromParams || noOfReviewsFromParams === "*") ? (
@@ -188,15 +188,15 @@ const HomeScreen = ({match, history}) => {
                                         </Form.Group>
                                     </Col>
                                     <Col>
-                                        <Form.Group controlId="ageCategory">
+                                        <Form.Group controlId="department">
                                             <Form.Label>
-                                                Age category
+                                                Department
                                             </Form.Label>
                                             <Form.Control
                                                 as="select"
-                                                value={ageCategory}
+                                                value={department}
                                                 onChange={(e) =>
-                                                    setageCategory(
+                                                    setdepartment(
                                                         e.target.value
                                                     )
                                                 }
@@ -204,19 +204,21 @@ const HomeScreen = ({match, history}) => {
                                                 <option value="">
                                                     Select...
                                                 </option>
-                                                <option value="kids">
-                                                    Kids (5 - 12 years)
+                                                <option value="CSE">
+                                                    CSE
                                                 </option>
-                                                <option value="teen">
-                                                    Teen (13 - 22 years)
+                                                <option value="IT">
+                                                    IT
                                                 </option>
-                                                <option value="middle aged">
-                                                    Middle aged (23 - 45 years)
+                                                <option value="EEE">
+                                                    EEE
                                                 </option>
-                                                <option value="old aged">
-                                                    Old aged (above 45 years)
+                                                <option value="ECE">
+                                                    ECE
                                                 </option>
-                                                <option value="all">All</option>
+                                                <option value="Mech">
+                                                    Mech
+                                                </option>
                                             </Form.Control>
                                         </Form.Group>
                                     </Col>
@@ -340,7 +342,7 @@ const HomeScreen = ({match, history}) => {
                         nameFromParams={nameFromParams}
                         authorFromParams={authorFromParams}
                         genreFromParams={genreFromParams}
-                        ageCategoryFromParams={ageCategoryFromParams}
+                        departmentFromParams={departmentFromParams}
                         publicationNameFromParams={publicationNameFromParams}
                         ratingsFromParams={ratingsFromParams}
                         noOfReviewsFromParams={noOfReviewsFromParams}

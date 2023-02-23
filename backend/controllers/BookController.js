@@ -26,9 +26,9 @@ const getBooks = asyncHandler(async (req, res) => {
         };
     }
 
-    if (req.query.ageCategory && req.query.ageCategory !== "*") {
-        searchObj["ageCategory"] = {
-            $regex: req.query.ageCategory,
+    if (req.query.department && req.query.department !== "*") {
+        searchObj["department"] = {
+            $regex: req.query.department,
             $options: "i",
         };
     }
@@ -65,7 +65,7 @@ const getBooks = asyncHandler(async (req, res) => {
 });
 
 const getBookById = asyncHandler(async (req, res) => {
-    const book = await Book.findById(req.params.id).populate("reviews.user");
+    const book = await Book.findById(req.params.id).populate({path: "reviews.user", select: "-password"});
 
     if (book) {
         res.json(book);
@@ -95,7 +95,7 @@ const createBook = asyncHandler(async (req, res) => {
         description: "Sample description",
         author: "Sample author",
         genre: "Sample genre",
-        ageCategory: "kids",
+        department: "CSE",
         publishedDate: new Date("2022-02-22"),
         noOfPages: 222,
         publicationName: "Sample publication",
@@ -115,7 +115,7 @@ const createBook = asyncHandler(async (req, res) => {
 });
 
 const updateBook = asyncHandler(async (req, res) => {
-    const { name, image, description, author, genre, ageCategory, publishedDate, noOfPages, publicationName, editionNumber, finePerDay, noOfReviews, ratings, floorNumber, rackNumber, rowNumber, positionFromLeft, rfid } = req.body;
+    const { name, image, description, author, genre, department, publishedDate, noOfPages, publicationName, editionNumber, finePerDay, noOfReviews, ratings, floorNumber, rackNumber, rowNumber, positionFromLeft, rfid } = req.body;
 
     const book = await Book.findById(req.params.id);
 
@@ -126,7 +126,7 @@ const updateBook = asyncHandler(async (req, res) => {
         book.description = description;
         book.author = author;
         book.genre = genre;
-        book.ageCategory = ageCategory;
+        book.department = department;
         book.publishedDate = publishedDate;
         book.noOfPages = noOfPages;
         book.publicationName = publicationName;

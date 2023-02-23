@@ -1,5 +1,5 @@
 
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../Components/Message";
 import Loader from "../Components/Loader";
@@ -14,8 +14,7 @@ const UserEditScreen = ({ match, history }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
-    const [ageCategory, setAgeCategory] = useState("");
-    const [age, setAge] = useState(-1);
+    const [department, setDepartment] = useState("");
     const [isAdmin, setIsAdmin] = useState(false)
     const [isVerified, setIsVerified] = useState(false);
     const [rfid, setRfid] = useState("")
@@ -41,7 +40,7 @@ const UserEditScreen = ({ match, history }) => {
             setIsVerified(user.isVerified)
             setRfid(user.rfid)
             setPhone(user.phone);
-            setAge(user.age);
+            setDepartment(user.department);
         } else {
             if (!user.name || user._id !== userId) {
                 dispatch(getUserDetails(userId));
@@ -50,36 +49,17 @@ const UserEditScreen = ({ match, history }) => {
                 setEmail(user.email);
                 setIsAdmin(user.isAdmin);
                 setPhone(user.phone);
-                setAge(user.age);
+                setDepartment(user.department);
                 setIsVerified(user.isVerified)
                 setRfid(user.rfid)
             }
         }
     }, [dispatch, userId, user, history, successUpdate]);
 
-    const findAgeCategory = (enteredAge) => {
-        if (enteredAge >= 0 && enteredAge <= 100) {
-            setAge(enteredAge);
-        } else {
-            setAge(-1);
-            return;
-        }
-
-        if (enteredAge >= 0 && enteredAge <= 12) {
-            setAgeCategory("kids");
-        } else if (enteredAge >= 13 && enteredAge <= 22) {
-            setAgeCategory("teen");
-        } else if (enteredAge >= 23 && enteredAge <= 45) {
-            setAgeCategory("middle aged");
-        } else if (enteredAge >= 46 && enteredAge <= 100) {
-            setAgeCategory("old aged");
-        }
-    };
-
     const submitHandler = (e) => {
         e.preventDefault();
         if (
-            !name || !email || !phone || !age || age === -1) {
+            !name || !email || !phone || !department) {
             setMessage("Enter all fields");
             return;
         }
@@ -92,7 +72,7 @@ const UserEditScreen = ({ match, history }) => {
             setMessage("Enter a valid mobile number");
             return;
         }
-        dispatch(updateUser({ _id: userId, name, email, isAdmin, phone, age, ageCategory, isVerified, rfid }));
+        dispatch(updateUser({ _id: userId, name, email, isAdmin, phone, department, isVerified, rfid }));
     };
 
     return (
@@ -146,17 +126,111 @@ const UserEditScreen = ({ match, history }) => {
                             ></Form.Control>
                         </Form.Group>
 
-                        <Form.Group controlId="age">
-                            <Form.Label>Age</Form.Label>
-                            <Form.Control
-                                type="number"
-                                placeholder="Enter age"
-                                value={age}
-                                onChange={(e) =>
-                                    findAgeCategory(e.target.value)
-                                }
-                            ></Form.Control>
-                        </Form.Group>
+                        <Row>
+                            <Form.Group controlId="department">
+                                <Form.Label>Department</Form.Label>
+                            </Form.Group>
+                            <Form.Group as={Col} controlId="checkbox1">
+                                <Form.Check
+                                    type="radio"
+                                    id="LMS-book-edit-checkbox-CSE"
+                                    label="CSE"
+                                    name="isDepartmentChecked"
+                                    checked={
+                                        department === "CSE" ? true : false
+                                    }
+                                    defaultChecked="true"
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            setDepartment("CSE");
+                                        }
+                                    }}
+                                    className="form-checkbox"
+                                />
+                            </Form.Group>
+                            <Form.Group
+                                as={Col}
+                                className="ps-0"
+                                controlId="checkbox2"
+                            >
+                                <Form.Check
+                                    type="radio"
+                                    id="LMS-book-edit-checkbox-IT"
+                                    label="IT"
+                                    name="isDepartmentChecked"
+                                    checked={department === "IT" ? true : false}
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            setDepartment("IT");
+                                        }
+                                    }}
+                                    className="form-checkbox"
+                                />
+                            </Form.Group>
+                            <Form.Group
+                                as={Col}
+                                className="ps-0"
+                                controlId="checkbox3"
+                            >
+                                <Form.Check
+                                    type="radio"
+                                    id="LMS-book-edit-checkbox-EEE"
+                                    label="EEE"
+                                    name="isDepartmentChecked"
+                                    checked={
+                                        department === "EEE" ? true : false
+                                    }
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            setDepartment("EEE");
+                                        }
+                                    }}
+                                    className="form-checkbox"
+                                />
+                            </Form.Group>
+                            <Form.Group
+                                as={Col}
+                                className="ps-0"
+                                controlId="checkbox4"
+                            >
+                                <Form.Check
+                                    type="radio"
+                                    id="LMS-book-edit-checkbox-ECE"
+                                    label="ECE"
+                                    name="isDepartmentChecked"
+                                    checked={
+                                        department === "ECE" ? true : false
+                                    }
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            setDepartment("ECE");
+                                        }
+                                    }}
+                                    className="form-checkbox"
+                                />
+                            </Form.Group>
+                            <Form.Group
+                                as={Col}
+                                className="ps-0"
+                                controlId="checkbox5"
+                            >
+                                <Form.Check
+                                    type="radio"
+                                    id="LMS-book-edit-checkbox-Mech"
+                                    label="Mech"
+                                    name="isDepartmentChecked"
+                                    checked={
+                                        department === "Mech" ? true : false
+                                    }
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            setDepartment("Mech");
+                                        }
+                                    }}
+                                    className="form-checkbox"
+                                />
+                            </Form.Group>
+                        </Row>
 
                         <Form.Group controlId="isadmin">
                             <Form.Check
@@ -190,7 +264,11 @@ const UserEditScreen = ({ match, history }) => {
                             ></Form.Control>
                         </Form.Group>
 
-                        <Button type="submit" className="mt-3" variant="primary">
+                        <Button
+                            type="submit"
+                            className="mt-3"
+                            variant="primary"
+                        >
                             Update
                         </Button>
                     </Form>

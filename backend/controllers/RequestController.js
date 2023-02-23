@@ -49,7 +49,7 @@ export const processCardID = asyncHandler(async (req, res) => {
             isClosed: false,
             isBookScanned: true,
             isUserScanned: false
-        }).populate("userId").populate("bookId");
+        }).populate({path: "userId", select: "-password"}).populate("bookId");
 
         if(requestRaised) {
             requestRaised.isUserScanned = true
@@ -83,7 +83,7 @@ export const processCardID = asyncHandler(async (req, res) => {
             isClosed: false,
             isBookScanned: false,
             isUserScanned: false,
-        }).populate("bookId").populate("userId");
+        }).populate("bookId").populate({path: "userId", select: "-password"});
         
         if(requestRaisedForBorrowing) {
             requestRaisedForBorrowing.isBookScanned = true
@@ -106,7 +106,7 @@ export const processCardID = asyncHandler(async (req, res) => {
             isClosed: false,
             isBookScanned: true,
             isUserScanned: true,
-        }).populate("userId").populate("bookId");
+        }).populate({path: "userId", select: "-password"}).populate("bookId");
 
         if(requestRaisedForReturning) {
 
@@ -402,7 +402,7 @@ export const findRequestsByUserId = asyncHandler(async (req, res) => {
 });
 
 export const fetchAllRequests = asyncHandler(async (req, res) => {
-    let requests = await Request.find().populate("bookId").populate("userId");
+    let requests = await Request.find().populate("bookId").populate({path: "userId", select: "-password"});
     if (requests) {
         res.status(200).json(requests);
     } else {
@@ -412,7 +412,7 @@ export const fetchAllRequests = asyncHandler(async (req, res) => {
 });
 
 export const individualRequest = asyncHandler(async (req, res) => {
-    let request = await Request.findById(req.body.id).populate("bookId").populate("userId");
+    let request = await Request.findById(req.body.id).populate("bookId").populate({path: "userId", select: "-password"});
     let userId = req.body.userId
     if (request) {
         if(userId === request.userId._id.toString() || req.user.isAdmin) {
@@ -473,11 +473,11 @@ export const getSuggestions = asyncHandler(async (req, res) => {
     let authors = [];
     let genre = [];
     let bookIdReadByUser = [];
-    let ageCategory = user.ageCategory;
+    let department = user.department;
     let overallSuggestions = [];
     let authorSuggestions = [];
     let genreSuggestions = [];
-    let ageCategorySuggestions = [];
+    let departmentSuggestions = [];
     let ratingsSuggestions = [];
 
     //get authors and genre and bookid of previous requests done by the user
@@ -527,17 +527,17 @@ export const getSuggestions = asyncHandler(async (req, res) => {
             authorSuggestions,
             genreSuggestions
         );
-        let ageCategoryBasedBooks = await Book.find({
-            ageCategory: ageCategory,
+        let departmentBasedBooks = await Book.find({
+            department: department,
             _id: { $nin: notInACId },
         });
-        ageCategoryBasedBooks.forEach((ageCategoryBasedBook) => {
-            ageCategorySuggestions.push(ageCategoryBasedBook._id);
+        departmentBasedBooks.forEach((departmentBasedBook) => {
+            departmentSuggestions.push(departmentBasedBook._id);
         });
         let notInRId = bookIdReadByUser.concat(
             authorSuggestions,
             genreSuggestions,
-            ageCategorySuggestions
+            departmentSuggestions
         );
         let ratingsSuggestionsBasedBooks = await Book.find({
             _id: { $nin: notInRId },
@@ -551,7 +551,7 @@ export const getSuggestions = asyncHandler(async (req, res) => {
         let maxLength = Math.max(
             authorSuggestions.length,
             genreSuggestions.length,
-            ageCategorySuggestions.length,
+            departmentSuggestions.length,
             ratingsSuggestions.length
         );
 
@@ -565,8 +565,8 @@ export const getSuggestions = asyncHandler(async (req, res) => {
                 overallSuggestions.push(genreSuggestions[i]);
             }
 
-            if (i < ageCategorySuggestions.length) {
-                overallSuggestions.push(ageCategorySuggestions[i]);
+            if (i < departmentSuggestions.length) {
+                overallSuggestions.push(departmentSuggestions[i]);
             }
 
             if (i < ratingsSuggestions.length) {

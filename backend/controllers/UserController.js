@@ -23,8 +23,7 @@ const authUser = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             phone: user.phone,
-            age: user.age,
-            ageCategory: user.ageCategory,
+            department: user.department,
             isAdmin: user.isAdmin,
             isVerified: user.isVerified,
             token: generateToken(user._id),
@@ -36,7 +35,7 @@ const authUser = asyncHandler(async (req, res) => {
 });
 
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password, phone, age, ageCategory } = req.body;
+    const { name, email, password, phone, department } = req.body;
 
     const emailExists = await User.findOne({ email });
     const phoneExists = await User.findOne({ phone });
@@ -54,8 +53,7 @@ const registerUser = asyncHandler(async (req, res) => {
         email,
         password,
         phone,
-        age,
-        ageCategory
+        department
     });
 
     const token = await new TokenModel({
@@ -93,8 +91,7 @@ export const verifyCredentials = asyncHandler(async (req, res) => {
                     name: updatedUser.name,
                     email: updatedUser.email,
                     phone: updatedUser.phone,
-                    age: updatedUser.age,
-                    ageCategory: updatedUser.ageCategory,
+                    department: updatedUser.department,
                     isAdmin: updatedUser.isAdmin,
                     isVerified: updatedUser.isVerified,
                     isUserCredentialsVerified: updatedUser.isUserCredentialsVerified,
@@ -151,8 +148,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             phone: user.phone,
-            age: user.age,
-            ageCategory: user.ageCategory,
+            department: user.department,
             isAdmin: user.isAdmin,
             isVerified: user.isVerified,
             fineAmount: user.fineAmount
@@ -170,8 +166,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
         user.phone = req.body.phone || user.phone;
-        user.age = req.body.age || user.age;
-        user.ageCategory = req.body.ageCategory || user.ageCategory;
+        user.department = req.body.department || user.department;
         if (req.body.password) {
             user.password = req.body.password;
         }
@@ -183,8 +178,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
             name: updatedUser.name,
             email: updatedUser.email,
             phone: updatedUser.phone,
-            age: updatedUser.age,
-            ageCategory: updatedUser.ageCategory,
+            department: updatedUser.department,
             isAdmin: updatedUser.isAdmin,
             isVerified: updatedUser.isVerified,
             token: generateToken(updatedUser._id),
@@ -230,8 +224,7 @@ const updateUser = asyncHandler(async (req, res) => {
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
         user.phone = req.body.phone || user.phone;
-        user.age = req.body.age || user.age;
-        user.ageCategory = req.body.ageCategory || user.ageCategory;
+        user.department = req.body.department || user.department;
         user.isAdmin = req.body.isAdmin
         user.isVerified = req.body.isVerified
         user.rfid = req.body.rfid 
@@ -243,8 +236,7 @@ const updateUser = asyncHandler(async (req, res) => {
             name: updatedUser.name,
             email: updatedUser.email,
             phone: updatedUser.phone,
-            age: updatedUser.age,
-            ageCategory: updatedUser.ageCategory,
+            department: updatedUser.department,
             isAdmin: updatedUser.isAdmin,
             isVerified: updatedUser.isVerified,
             rfid: updatedUser.rfid,

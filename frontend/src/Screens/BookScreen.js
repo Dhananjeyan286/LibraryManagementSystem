@@ -116,18 +116,10 @@ const BookScreen = ({ match }) => {
                                 <ListGroup variant="flush">
                                     <ListGroup.Item>
                                         <Row>
-                                            <Col>Age Category:</Col>
+                                            <Col>Department:</Col>
                                             <Col>
                                                 <strong>
-                                                    {book.ageCategory === "kids"
-                                                        ? "0-12"
-                                                        : book.ageCategory ===
-                                                          "teen"
-                                                        ? "13-22"
-                                                        : book.ageCategory ===
-                                                          "middle aged"
-                                                        ? "23-45"
-                                                        : "above 45"}
+                                                    {book.department}
                                                 </strong>
                                             </Col>
                                         </Row>

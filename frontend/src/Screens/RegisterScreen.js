@@ -10,8 +10,7 @@ const RegisterScreen = ({ location, history }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
-    const [ageCategory, setAgeCategory] = useState("");
-    const [age, setAge] = useState(-1);
+    const [department, setDepartment] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [message, setMessage] = useState("");
@@ -38,29 +37,9 @@ const RegisterScreen = ({ location, history }) => {
         }
     }, [history, userInfo, redirect]);
 
-    const findAgeCategory = (enteredAge) => {
-
-        if( enteredAge >= 0 && enteredAge <= 100 ) {
-            setAge(enteredAge)
-        } else {
-            setAge(-1)
-            return
-        }
-
-        if (enteredAge >= 0 && enteredAge <= 12) {
-            setAgeCategory("kids");
-        } else if (enteredAge >= 13 && enteredAge <= 22) {
-            setAgeCategory("teen");
-        } else if (enteredAge >= 23 && enteredAge <= 45) {
-            setAgeCategory("middle aged");
-        } else if (enteredAge >= 46 && enteredAge <= 100) {
-            setAgeCategory("old aged");
-        }
-    }
-
     const submitHandler = (e) => {
         e.preventDefault();
-        if( !name || !email || !phone || !password || !confirmPassword || !age || age === -1 ) {
+        if( !name || !email || !phone || !password || !confirmPassword || !department ) {
             setMessage("Enter all fields")
             return
         }
@@ -78,7 +57,7 @@ const RegisterScreen = ({ location, history }) => {
             return;
         }
         
-        dispatch(register(name, email, phone, password, age, ageCategory));
+        dispatch(register(name, email, phone, password, department));
     };
 
     const verifySubmitHandler = (e) => {
@@ -152,15 +131,87 @@ const RegisterScreen = ({ location, history }) => {
                     ></Form.Control>
                 </Form.Group>
 
-                <Form.Group controlId="age">
-                    <Form.Label>Age</Form.Label>
-                    <Form.Control
-                        type="number"
-                        placeholder="Enter age"
-                        value={age}
-                        onChange={(e) => findAgeCategory(e.target.value)}
-                    ></Form.Control>
-                </Form.Group>
+                <Row>
+                    <Form.Group controlId="department">
+                        <Form.Label>Department</Form.Label>
+                    </Form.Group>
+                    <Form.Group as={Col} controlId="checkbox1">
+                        <Form.Check
+                            type="radio"
+                            id="LMS-book-edit-checkbox-CSE"
+                            label="CSE"
+                            name="isDepartmentChecked"
+                            checked={department === "CSE" ? true : false}
+                            defaultChecked="true"
+                            onChange={(e) => {
+                                if (e.target.checked) {
+                                    setDepartment("CSE");
+                                }
+                            }}
+                            className="form-checkbox"
+                        />
+                    </Form.Group>
+                    <Form.Group as={Col} className="ps-0" controlId="checkbox2">
+                        <Form.Check
+                            type="radio"
+                            id="LMS-book-edit-checkbox-IT"
+                            label="IT"
+                            name="isDepartmentChecked"
+                            checked={department === "IT" ? true : false}
+                            onChange={(e) => {
+                                if (e.target.checked) {
+                                    setDepartment("IT");
+                                }
+                            }}
+                            className="form-checkbox"
+                        />
+                    </Form.Group>
+                    <Form.Group as={Col} className="ps-0" controlId="checkbox3">
+                        <Form.Check
+                            type="radio"
+                            id="LMS-book-edit-checkbox-EEE"
+                            label="EEE"
+                            name="isDepartmentChecked"
+                            checked={department === "EEE" ? true : false}
+                            onChange={(e) => {
+                                if (e.target.checked) {
+                                    setDepartment("EEE");
+                                }
+                            }}
+                            className="form-checkbox"
+                        />
+                    </Form.Group>
+                    <Form.Group as={Col} className="ps-0" controlId="checkbox4">
+                        <Form.Check
+                            type="radio"
+                            id="LMS-book-edit-checkbox-ECE"
+                            label="ECE"
+                            name="isDepartmentChecked"
+                            checked={department === "ECE" ? true : false}
+                            onChange={(e) => {
+                                if (e.target.checked) {
+                                    setDepartment("ECE");
+                                }
+                            }}
+                            className="form-checkbox"
+                        />
+                    </Form.Group>
+                    <Form.Group as={Col} className="ps-0" controlId="checkbox5">
+                        <Form.Check
+                            type="radio"
+                            id="LMS-book-edit-checkbox-Mech"
+                            label="Mech"
+                            name="isDepartmentChecked"
+                            checked={department === "Mech" ? true : false}
+                            onChange={(e) => {
+                                if (e.target.checked) {
+                                    setDepartment("Mech");
+                                }
+                            }}
+                            className="form-checkbox"
+                        />
+                    </Form.Group>
+                </Row>
 
                 <Button type="submit" className="mt-3" variant="primary">
                     Register
@@ -207,7 +258,12 @@ const RegisterScreen = ({ location, history }) => {
                             ></Form.Control>
                         </Form.Group>
                     </Form>
-                    <Button type="button" onClick={verifySubmitHandler} className="mt-3" variant="primary">
+                    <Button
+                        type="button"
+                        onClick={verifySubmitHandler}
+                        className="mt-3"
+                        variant="primary"
+                    >
                         Verify
                     </Button>
                     <Button

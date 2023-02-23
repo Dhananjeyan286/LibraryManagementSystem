@@ -2,7 +2,7 @@ import React from "react";
 import { Pagination } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap"
 
-const Paginate = ({ pages, page, isAdmin = false, nameFromParams, authorFromParams, genreFromParams, ageCategoryFromParams, publicationNameFromParams, ratingsFromParams,noOfReviewsFromParams }) => {
+const Paginate = ({ pages, page, isAdmin = false, nameFromParams, authorFromParams, genreFromParams, departmentFromParams, publicationNameFromParams, ratingsFromParams,noOfReviewsFromParams }) => {
     return (
         pages > 1 && (
             <Pagination>
@@ -16,8 +16,8 @@ const Paginate = ({ pages, page, isAdmin = false, nameFromParams, authorFromPara
                                       authorFromParams === "*") &&
                                   (!genreFromParams ||
                                       genreFromParams === "*") &&
-                                  (!ageCategoryFromParams ||
-                                      ageCategoryFromParams === "*") &&
+                                  (!departmentFromParams ||
+                                      departmentFromParams === "*") &&
                                   (!publicationNameFromParams ||
                                       publicationNameFromParams === "*") &&
                                   (!ratingsFromParams ||
@@ -25,7 +25,7 @@ const Paginate = ({ pages, page, isAdmin = false, nameFromParams, authorFromPara
                                   (!noOfReviewsFromParams ||
                                       noOfReviewsFromParams === "*")) ? `/page/${x + 1}` 
                                       : 
-                                      `/page/${x + 1}/name/${nameFromParams}/author/${authorFromParams}/genre/${genreFromParams}/ageCategory/${ageCategoryFromParams}/publicationName/${publicationNameFromParams}/ratings/${ratingsFromParams}/noOfReviews/${noOfReviewsFromParams}`
+                                      `/page/${x + 1}/name/${nameFromParams}/author/${authorFromParams}/genre/${genreFromParams}/department/${departmentFromParams}/publicationName/${publicationNameFromParams}/ratings/${ratingsFromParams}/noOfReviews/${noOfReviewsFromParams}`
                                 : `/admin/booklist/${x + 1}`
                         }
                     >
