@@ -85,7 +85,7 @@ const BookListScreen = ({ history, match }) => {
                                 <th>AUTHOR</th>
                                 <th>GENRE</th>
                                 <th>PUBLICATION</th>
-                                <th></th>
+                                <th style={{width: "118px"}}></th>
                             </tr>
                         </thead>
                         <tbody>

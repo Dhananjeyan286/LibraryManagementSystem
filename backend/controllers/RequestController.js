@@ -8,7 +8,7 @@ import SendSms from "../utils/SendSms.js"
 var borrowingLimitDays = 1;
 var maximumBookingTime = 1440; // 24 hours
 var maximumFineAmount = 500
-var suggestionLimit = 3
+var suggestionLimit = 6
 
 var add_minutes = function (dt, minutes) {
     return new Date(dt.getTime() + minutes * 60000);

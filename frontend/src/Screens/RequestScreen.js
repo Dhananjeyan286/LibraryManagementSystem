@@ -258,7 +258,7 @@ const RequestScreen = ({ match, history }) => {
                                     {request.bookedAt && (
                                         <ListGroup.Item>
                                             <Row>
-                                                <Col>Borrowed At:</Col>
+                                                <Col>Booked At:</Col>
                                                 <Col>
                                                     {convertDateToString(new Date(request.bookedAt))}
                                                 </Col>

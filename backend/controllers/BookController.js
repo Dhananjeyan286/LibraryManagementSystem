@@ -52,7 +52,7 @@ const getBooks = asyncHandler(async (req, res) => {
         };
     }
 
-    const pageSize = 2;
+    const pageSize = 10;
     const page = Number(req.query.pageNumber) || 1;
 
     const count = await Book.countDocuments(searchObj);
@@ -186,7 +186,7 @@ const createBookReview = asyncHandler(async (req, res) => {
 });
 
 const getTopBooks = asyncHandler(async (req, res) => {
-    const books = await Book.find({}).sort({ ratings: -1 }).limit(3);
+    const books = await Book.find({}).sort({ ratings: -1 }).limit(6);
 
     res.json(books);
 });
